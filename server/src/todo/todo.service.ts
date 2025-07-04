@@ -8,6 +8,25 @@ export class TodoService {
     constructor(private readonly prismaService: PrismaService) {
     }
 
+    async createTodo(userId, dto: CreateTodoDto) {
+        const {todoListId, longDescription, dueDate, shortDescription} = dto;
+        const list = await this.getListById(todoListId);
+
+        if (list.ownerId !== userId) {
+            throw new ForbiddenException('You do not have permission to add tasks to this list.');
+        }
+
+        return this.prismaService.todo.create({
+            data: {
+                shortDescription,
+                dueDate,
+                longDescription,
+                todoListId,
+            }
+        })
+
+    }
+
     async getLists(userId: string) {
         return this.prismaService.todoList.findMany({
             where: {ownerId: userId},

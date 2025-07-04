@@ -3,10 +3,22 @@ import {TodoService} from './todo.service';
 import {Authorization} from "@/auth/decorators/authorization.decorator";
 import {Authorized} from "@/auth/decorators/authorized.decorator";
 import {CreateTodoListDto} from "@/todo/dto/create-todo-list.dto";
+import {CreateTodoDto} from "@/todo/dto/create-todo.dto";
+import {ApiOperation} from "@nestjs/swagger";
 
 @Controller('todo')
 export class TodoController {
     constructor(private readonly todoService: TodoService) {
+    }
+
+    @Authorization()
+    @Post()
+    @ApiOperation({ summary: 'Create a todo task' })
+    async createTodo(
+        @Authorized('id') userId: string,
+        @Body() dto: CreateTodoDto)
+    {
+        return this.todoService.createTodo(userId, dto);
     }
 
     @Authorization()
@@ -32,9 +44,7 @@ export class TodoController {
 
     @Authorization()
     @Delete('list/:id')
-    async deleteTodoList(@Param('id') listId: string, @Authorized('id') userId: string) {
+    async deleteList(@Param('id') listId: string, @Authorized('id') userId: string) {
         return this.todoService.deleteTodoList(listId, userId);
     }
-
-
 }
