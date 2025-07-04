@@ -1,4 +1,4 @@
-import {ConflictException, Injectable} from '@nestjs/common';
+import {ConflictException, ForbiddenException, Injectable, NotFoundException} from '@nestjs/common';
 import {PrismaService} from "@/prisma/prisma.service";
 import {CreateTodoDto} from "@/todo/dto/create-todo.dto";
 import {CreateTodoListDto} from "@/todo/dto/create-todo-list.dto";
@@ -8,7 +8,7 @@ export class TodoService {
     constructor(private readonly prismaService: PrismaService) {
     }
 
-    async getTodoList(userId: string) {
+    async getLists(userId: string) {
         return this.prismaService.todoList.findMany({
             where: {ownerId: userId},
             include: {todos: true}
@@ -31,12 +31,41 @@ export class TodoService {
         }
 
 
-
         return this.prismaService.todoList.create({
             data: {
                 title: dto.title,
                 ownerId: userId,
             },
         });
+    }
+
+    async getListById(listId: string) {
+        const list = await this.prismaService.todoList.findUnique({
+            where: {
+                id: listId,
+            }
+        })
+
+        if (!list) {
+            throw new NotFoundException('Todo list not found')
+        }
+
+        return list;
+
+    }
+
+    async deleteTodoList(listId: string, userId: string) {
+
+        const list = await this.getListById(listId);
+
+        if (list.ownerId !== userId) {
+            throw new ForbiddenException('You do not have access to this list');
+        }
+
+        await this.prismaService.todoList.delete({
+            where: {id: listId},
+        })
+
+        return {message: 'Todolist deleted successfully.'};
     }
 }

@@ -37,7 +37,7 @@ model Todo {
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
-  todoList   TodoList? @relation(fields: [todoListId], references: [id])
+  todoList   TodoList? @relation(fields: [todoListId], references: [id], onDelete: Cascade)
   todoListId String?   @map("todo_list_id")
 
   @@map("todos")
@@ -46,7 +46,7 @@ model Todo {
 model TodoList {
   id        String   @id @default(uuid())
   title     String
-  owner     User     @relation(fields: [ownerId], references: [id])
+  owner     User     @relation(fields: [ownerId], references: [id], onDelete: Cascade)
   ownerId   String   @map("owner_id")
   todos     Todo[]
   createdAt DateTime @default(now()) @map("created_at")
