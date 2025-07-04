@@ -1,4 +1,4 @@
-import {Body, Controller, Get, HttpCode, HttpStatus, Post, Req, Res, UseGuards} from '@nestjs/common'
+import {Body, Controller, Get, HttpCode, HttpStatus, Post, Req, Res} from '@nestjs/common'
 import {AuthService} from './auth.service'
 import {RegisterDto} from '@/auth/dto/register.dto'
 import {LoginDto} from '@/auth/dto/login.dto'
@@ -13,10 +13,8 @@ import {
     ApiUnauthorizedResponse
 } from '@nestjs/swagger'
 import {AuthResponseDto} from '@/auth/dto/auth.dto'
-import {AuthGuard} from "@nestjs/passport";
 import {Authorization} from "@/auth/decorators/authorization.decorator";
 import {Authorized} from "@/auth/decorators/authorized.decorator";
-import {User} from "@prisma/generated";
 
 @Controller('auth')
 export class AuthController {
