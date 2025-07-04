@@ -2,7 +2,6 @@ import {ConflictException, ForbiddenException, Injectable, NotFoundException} fr
 import {PrismaService} from "@/prisma/prisma.service";
 import {CreateTodoDto} from "@/todo/dto/create-todo.dto";
 import {CreateTodoListDto} from "@/todo/dto/create-todo-list.dto";
-import {Todo} from "@prisma/generated";
 
 @Injectable()
 export class TodoService {
@@ -10,7 +9,7 @@ export class TodoService {
     }
 
 
-    async createTodo(userId, dto: CreateTodoDto) {
+    async createTodo(userId:string, dto: CreateTodoDto) {
         const {todoListId, longDescription, dueDate, shortDescription} = dto;
         const list = await this.getListById(todoListId);
 
