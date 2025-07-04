@@ -1,4 +1,4 @@
-import {Body, Controller, Delete, Get, Param, Post} from '@nestjs/common';
+import {Body, Controller, Delete, Get, Param, Patch, Post} from '@nestjs/common';
 import {TodoService} from './todo.service';
 import {Authorization} from "@/auth/decorators/authorization.decorator";
 import {Authorized} from "@/auth/decorators/authorized.decorator";
@@ -19,6 +19,28 @@ export class TodoController {
         @Body() dto: CreateTodoDto)
     {
         return this.todoService.createTodo(userId, dto);
+    }
+
+    @Authorization()
+    @Get('list/:listId/todos')
+    async getTodosInList(
+        @Authorized('id') userId: string,
+        @Param('listId') listId: string,
+    ) {
+        return this.todoService.getTodosInList(userId, listId);
+    }
+
+
+    @Authorization()
+    @Patch(':id')
+    async markCompleted(@Authorized('id') userId: string, @Param('id') todoId: string) {
+        return this.todoService.markTodoCompleted(userId, todoId);
+    }
+
+    @Authorization()
+    @Delete(':id')
+    async deleteTodo(@Authorized('id') userId: string, @Param('id') todoId: string) {
+        return this.todoService.deleteTodo(userId, todoId);
     }
 
     @Authorization()

@@ -2,11 +2,13 @@ import {ConflictException, ForbiddenException, Injectable, NotFoundException} fr
 import {PrismaService} from "@/prisma/prisma.service";
 import {CreateTodoDto} from "@/todo/dto/create-todo.dto";
 import {CreateTodoListDto} from "@/todo/dto/create-todo-list.dto";
+import {Todo} from "@prisma/generated";
 
 @Injectable()
 export class TodoService {
     constructor(private readonly prismaService: PrismaService) {
     }
+
 
     async createTodo(userId, dto: CreateTodoDto) {
         const {todoListId, longDescription, dueDate, shortDescription} = dto;
@@ -24,6 +26,69 @@ export class TodoService {
                 todoListId,
             }
         })
+    }
+
+    async getTodoById(todoId: string) {
+        const todo =  await this.prismaService.todo.findUnique({
+            where: {id: todoId},
+            include: {todoList: true},
+        });
+
+        if (!todo) {
+            throw new NotFoundException('Todo not found');
+        }
+
+        if (!todo.todoList) {
+            throw new NotFoundException('Todo list not found for this task');
+        }
+
+        return todo
+    }
+
+
+    async markTodoCompleted(userId, todoId) {
+        const todo = await this.getTodoById(todoId);
+
+        if ( todo.todoList!.ownerId !== userId) {
+            throw new ForbiddenException('You do not have permission to modify this todo.');
+        }
+
+        return this.prismaService.todo.update({
+            where: { id: todoId },
+            data: {
+                completed: true,
+            },
+        });
+    }
+
+    async deleteTodo(userId, todoId){
+        const todo = await this.getTodoById(todoId);
+        if ( todo.todoList!.ownerId !== userId) {
+            throw new ForbiddenException('You do not have permission to modify this todo.');
+        }
+
+        await this.prismaService.todo.delete({
+            where: {id: todoId},
+        })
+
+        return {message: 'Task deleted successfully.'};
+
+    }
+
+    async getTodosInList(userId: string, listId: string) {
+        const list = await this.getListById(listId);
+
+        if (list.ownerId !== userId) {
+            throw new ForbiddenException('You do not have permission to view this list.');
+        }
+
+        return this.prismaService.todo.findMany({
+            where: {
+                todoListId: listId,
+            },
+            orderBy: {dueDate: 'asc'}
+        })
+
 
     }
 
@@ -85,6 +150,6 @@ export class TodoService {
             where: {id: listId},
         })
 
-        return {message: 'Todolist deleted successfully.'};
+        return {message: 'Todo List deleted successfully.'};
     }
 }
