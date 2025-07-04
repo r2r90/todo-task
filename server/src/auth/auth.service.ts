@@ -1,4 +1,4 @@
-import { ConflictException, Injectable, NotFoundException } from '@nestjs/common'
+import { ConflictException, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common'
 import { PrismaService } from '@/prisma/prisma.service'
 import { RegisterDto } from '@/auth/dto/register.dto'
 import { hash, verify } from 'argon2'
@@ -6,7 +6,7 @@ import { ConfigService } from '@nestjs/config'
 import { JwtService } from '@nestjs/jwt'
 import type { JwtPayload } from '@/auth/interfaces/jwt.interface'
 import { LoginDto } from '@/auth/dto/login.dto'
-import type { Response } from 'express'
+import type { Request, Response } from 'express'
 import { isDev } from '@/lib/utils/is-dev.util'
 
 @Injectable()
@@ -72,7 +72,40 @@ export class AuthService {
 
 		return this.auth(res, user.id)
 
+	}
 
+	async refresh(req: Request, res: Response) {
+		const refreshToken = req.cookies['refreshToken']
+		if (!refreshToken) {
+			throw new UnauthorizedException('Refresh token not found')
+		}
+
+		const payload: JwtPayload = await this.jwtService.verifyAsync(refreshToken)
+
+		if (payload) {
+			const user = await this.prismaService.user.findUnique({
+				where: {
+					id: payload.id
+				},
+				select: {
+					id: true
+				}
+			})
+
+
+			if (!user) {
+				throw new UnauthorizedException('User not found')
+			}
+
+			return this.auth(res, user.id)
+		}
+
+		return false
+	}
+
+	async logout(res: Response) {
+		this.setCookie(res, 'refreshToken', new Date(0))
+		return true
 	}
 
 	private auth(res: Response, id: string) {

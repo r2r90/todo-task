@@ -8,6 +8,10 @@ export async function getJwtConfig(configService: ConfigService
 		signOptions: {
 			algorithm: 'HS256'
 
+		},
+		verifyOptions: {
+			algorithms: ['HS256'],
+			ignoreExpiration: false,
 		}
 	}
 }
