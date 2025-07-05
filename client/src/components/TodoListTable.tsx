@@ -1,4 +1,3 @@
-import * as React from "react"
 import {ScrollArea} from "@/components/ui/scroll-area"
 import {TodoListItem, type TaskList} from "./TodoListItem"
 
