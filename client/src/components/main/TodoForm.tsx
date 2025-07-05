@@ -4,21 +4,13 @@ import {zodResolver} from "@hookform/resolvers/zod"
 import {z} from "zod"
 
 import {Button} from "@/components/ui/button"
-import {
-    Form,
-    FormControl,
-    FormDescription,
-    FormField,
-    FormItem,
-    FormLabel,
-    FormMessage,
-} from "@/components/ui/form"
+import {Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage,} from "@/components/ui/form"
 import {Input} from "@/components/ui/input"
 import {Textarea} from "@/components/ui/textarea"
-import {SmartDatetimeInput} from "@/components/ui/SmartDatetimeInput"
 
 import {useTasks} from "@/hooks/TasksContext"
 import {useLists} from "@/hooks/ListsContext"
+import {DateTimePicker24h} from "../ui/DateTimePicker"
 
 // Zod schema
 const formSchema = z.object({
@@ -110,17 +102,13 @@ export default function TodoForm() {
                         control={form.control}
                         name="dueDate"
                         render={({field}) => (
-                            <FormItem className="flex flex-col">
-                                <FormLabel>Due Date *</FormLabel>
-                                <SmartDatetimeInput
-                                    name="datetime"
+                            <FormItem>
+                                <FormLabel>Deadline</FormLabel>
+                                <DateTimePicker24h
                                     value={field.value}
-                                    onValueChange={(date) => field.onChange(date)}
                                     onChange={field.onChange}
-                                    placeholder="e.g. tomorrow at 3pm"
-                                    disabled={(date) => date < new Date()}
                                 />
-                                <FormDescription>Select deadline.</FormDescription>
+                                <FormDescription>Select date and time</FormDescription>
                                 <FormMessage/>
                             </FormItem>
                         )}

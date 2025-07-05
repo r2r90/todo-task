@@ -8,9 +8,6 @@ export interface TodoProps {
     dueDate: string
     completed: boolean
     onToggleComplete: () => void
-    onEdit: () => void
-    onDelete: () => void
-    onAdd: () => void
 }
 
 export default function Todo({shortDesc, onToggleComplete}: TodoProps) {

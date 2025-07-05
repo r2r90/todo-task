@@ -1,26 +1,16 @@
 import Todo from "./Todo"
 import {
     Sheet,
-    SheetTrigger,
+    SheetClose,
     SheetContent,
-    SheetHeader,
-    SheetTitle,
     SheetDescription,
     SheetFooter,
-    SheetClose,
+    SheetHeader,
+    SheetTitle,
+    SheetTrigger,
 } from "@/components/ui/sheet"
-import {
-    AlertDialog,
-    AlertDialogTrigger,
-    AlertDialogContent,
-    AlertDialogHeader,
-    AlertDialogTitle,
-    AlertDialogDescription,
-    AlertDialogFooter,
-    AlertDialogCancel,
-    AlertDialogAction,
-} from "@/components/ui/alert-dialog"
-import { Button } from "@/components/ui/button"
+import {Button} from "@/components/ui/button"
+import {ConfirmDialog} from "@/components/ConfirmDialog";
 
 export interface TodoData {
     id: string
@@ -70,29 +60,14 @@ export default function TodoTable({ items, onToggle, onDelete }: TodoTableProps)
                         </div>
 
                         <SheetFooter>
-                            <AlertDialog>
-                                <AlertDialogTrigger asChild>
-                                    <Button variant="destructive">
-                                        Delete Task
-                                    </Button>
-                                </AlertDialogTrigger>
-                                <AlertDialogContent>
-                                    <AlertDialogHeader>
-                                        <AlertDialogTitle>Delete this task?</AlertDialogTitle>
-                                        <AlertDialogDescription>
-                                            This action cannot be undone and will permanently remove the task.
-                                        </AlertDialogDescription>
-                                    </AlertDialogHeader>
-                                    <AlertDialogFooter>
-                                        <AlertDialogCancel>Cancel</AlertDialogCancel>
-                                        <AlertDialogAction
-                                            onClick={() => onDelete(task.id)}
-                                        >
-                                            Confirm
-                                        </AlertDialogAction>
-                                    </AlertDialogFooter>
-                                </AlertDialogContent>
-                            </AlertDialog>
+                            <ConfirmDialog
+                                triggerLabel={
+                                    <Button variant="destructive">Delete Task</Button>
+                                }
+                                description="This will permanently delete the task. Are you sure?"
+                                confirmLabel="Delete"
+                                onConfirm={() => onDelete(task.id)}
+                            />
                             <SheetClose asChild>
                                 <Button variant="outline">Close</Button>
                             </SheetClose>

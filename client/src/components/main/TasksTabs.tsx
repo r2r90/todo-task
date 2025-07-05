@@ -9,13 +9,7 @@ export function TasksTabs() {
     const {tasks, loadTasks, toggleComplete, deleteTask} =
         useTasks()
 
-    if (!activeListId) {
-        return (
-            <div className="flex flex-1 items-center justify-center text-muted-foreground p-4 text-center">
-                No list selected — please select a list on the left.
-            </div>
-        )
-    }
+
 
 
     // Reload tasks whenever the selected list changes
@@ -39,6 +33,14 @@ export function TasksTabs() {
             dueDate: t.dueDate,
             completed: t.completed,
         }))
+
+    if (!activeListId) {
+        return (
+            <div className="flex flex-1 items-center justify-center text-muted-foreground p-4 text-center">
+                No list selected — please select a list on the left.
+            </div>
+        )
+    }
 
     return (
         <Tabs defaultValue="active" className="flex flex-col h-full">

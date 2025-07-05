@@ -1,14 +1,5 @@
-import {
-    AlertDialog,
-    AlertDialogAction,
-    AlertDialogCancel,
-    AlertDialogContent,
-    AlertDialogDescription,
-    AlertDialogFooter,
-    AlertDialogHeader,
-    AlertDialogTitle,
-    AlertDialogTrigger,
-} from "@/components/ui/alert-dialog"
+import {ConfirmDialog} from "@/components/ConfirmDialog";
+
 
 interface DeleteListButtonProps {
     listTitle: string
@@ -18,14 +9,13 @@ interface DeleteListButtonProps {
 
 export function DeleteListButton({ listTitle, listId, onDelete }: DeleteListButtonProps) {
     return (
-        <AlertDialog>
-            <AlertDialogTrigger asChild>
+        <ConfirmDialog
+            triggerLabel={
                 <button
                     className="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus:outline-none focus:ring-1
             focus:ring-ring disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-9 w-9"
                     onClick={(e) => e.stopPropagation()}
                 >
-                    {/* trash icon */}
                     <svg
                         stroke="currentColor"
                         fill="none"
@@ -42,21 +32,12 @@ export function DeleteListButton({ listTitle, listId, onDelete }: DeleteListButt
                         <line x1="14" y1="11" x2="14" y2="17" />
                     </svg>
                 </button>
-            </AlertDialogTrigger>
-            <AlertDialogContent>
-                <AlertDialogHeader>
-                    <AlertDialogTitle>Delete this list?</AlertDialogTitle>
-                    <AlertDialogDescription>
-                        All tasks from “{listTitle}” will also be deleted. This action cannot be undone.
-                    </AlertDialogDescription>
-                </AlertDialogHeader>
-                <AlertDialogFooter>
-                    <AlertDialogCancel>Cancel</AlertDialogCancel>
-                    <AlertDialogAction onClick={() => onDelete(listId)}>
-                        Delete
-                    </AlertDialogAction>
-                </AlertDialogFooter>
-            </AlertDialogContent>
-        </AlertDialog>
+            }
+            title="Delete this list?"
+            description={`All tasks in “${listTitle}” will also be deleted. This action cannot be undone.`}
+            confirmLabel="Delete"
+            onConfirm={() => onDelete(listId)}
+            variant="destructive"
+        />
     )
 }
