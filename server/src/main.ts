@@ -9,7 +9,7 @@ import { setupSwagger } from '@/lib/utils/swagger.util'
 async function bootstrap() {
     const app = await NestFactory.create(AppModule);
     const config = app.get(ConfigService)
-
+    app.setGlobalPrefix('api')
     app.use(cookieParser());
 
     app.useGlobalPipes(

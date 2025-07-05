@@ -1,7 +1,13 @@
-import {z} from 'zod'
-import {zodResolver} from '@hookform/resolvers/zod'
-import {useForm} from 'react-hook-form'
-import {toast} from 'sonner'
+// src/pages/LoginPage.tsx
+
+import React from 'react'
+import { z } from 'zod'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { useForm } from 'react-hook-form'
+import { toast } from 'sonner'
+import { useNavigate, Link } from 'react-router-dom'
+
+import { loginFormSchema } from '../../../shared/validation/schemas'
 
 import {
     Form,
@@ -11,43 +17,36 @@ import {
     FormLabel,
     FormMessage,
 } from '@/components/ui/form'
-import {Button} from '@/components/ui/button'
+import { Button } from '@/components/ui/button'
 import {
     Card,
     CardContent,
-    CardDescription,
     CardHeader,
     CardTitle,
+    CardDescription,
 } from '@/components/ui/card'
-import {Input} from '@/components/ui/input'
-import {PasswordInput} from '@/components/ui/password-input'
-import {loginFormSchema} from "../../../shared/validation/schemas.ts";
-import {Link} from "react-router-dom";
+import { Input } from '@/components/ui/input'
+import { PasswordInput } from '@/components/ui/password-input'
+import {useAuth} from "@/hooks/use-auth.hook.ts";
 
-
-const formSchema = loginFormSchema
+type LoginValues = z.infer<typeof loginFormSchema>
 
 export default function LoginPage() {
-    const form = useForm<z.infer<typeof formSchema>>({
-        resolver: zodResolver(formSchema),
-        defaultValues: {
-            email: '',
-            password: '',
-        },
+    const navigate = useNavigate()
+    const { login } = useAuth()
+    const form = useForm<LoginValues>({
+        resolver: zodResolver(loginFormSchema),
+        defaultValues: { email: '', password: '' },
     })
 
-    async function onSubmit(values: z.infer<typeof formSchema>) {
+    async function onSubmit(values: LoginValues) {
         try {
-            // Assuming an async login function
-            console.log(values)
-            toast(
-                <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-          <code className="text-white">{JSON.stringify(values, null, 2)}</code>
-        </pre>,
-            )
-        } catch (error) {
-            console.error('Form submission error', error)
-            toast.error('Failed to submit the form. Please try again.')
+            await login(values.email, values.password)
+            toast.success('Login successful!')
+            navigate('/dashboard', { replace: true })
+        } catch (err: any) {
+            console.error('Login error', err)
+            toast.error(err.response?.data?.message || 'Invalid email or password.')
         }
     }
 
@@ -63,58 +62,51 @@ export default function LoginPage() {
                 <CardContent>
                     <Form {...form}>
                         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-                            <div className="grid gap-4">
-                                <FormField
-                                    control={form.control}
-                                    name="email"
-                                    render={({field}) => (
-                                        <FormItem className="grid gap-2">
-                                            <FormLabel htmlFor="email">Email</FormLabel>
-                                            <FormControl>
-                                                <Input
-                                                    id="email"
-                                                    placeholder="johndoe@mail.com"
-                                                    type="email"
-                                                    autoComplete="email"
-                                                    {...field}
-                                                />
-                                            </FormControl>
-                                            <FormMessage/>
-                                        </FormItem>
-                                    )}
-                                />
-                                <FormField
-                                    control={form.control}
-                                    name="password"
-                                    render={({field}) => (
-                                        <FormItem className="grid gap-2">
-                                            {/*<div className="flex justify-between items-center">
-                                                <FormLabel htmlFor="password">Password</FormLabel>
-                                                <Link
-                                                    to="#"
-                                                    className="ml-auto inline-block text-sm underline"
-                                                >
-                                                    Forgot your password?
-                                                </Link>
-                                            </div>*/}
-                                            <FormControl>
-                                                <PasswordInput
-                                                    id="password"
-                                                    placeholder="******"
-                                                    autoComplete="current-password"
-                                                    {...field}
-                                                />
-                                            </FormControl>
-                                            <FormMessage/>
-                                        </FormItem>
-                                    )}
-                                />
-                                <Button type="submit" className="w-full">
-                                    Login
-                                </Button>
-                            </div>
+                            <FormField
+                                control={form.control}
+                                name="email"
+                                render={({ field }) => (
+                                    <FormItem className="grid gap-2">
+                                        <FormLabel htmlFor="email">Email Address</FormLabel>
+                                        <FormControl>
+                                            <Input
+                                                id="email"
+                                                type="email"
+                                                autoComplete="email"
+                                                placeholder="you@example.com"
+                                                {...field}
+                                            />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+
+                            <FormField
+                                control={form.control}
+                                name="password"
+                                render={({ field }) => (
+                                    <FormItem className="grid gap-2">
+                                        <FormLabel htmlFor="password">Password</FormLabel>
+                                        <FormControl>
+                                            <PasswordInput
+                                                id="password"
+                                                placeholder="••••••••"
+                                                autoComplete="current-password"
+                                                {...field}
+                                            />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+
+                            <Button type="submit" className="w-full">
+                                Sign In
+                            </Button>
                         </form>
                     </Form>
+
                     <div className="mt-4 text-center text-sm">
                         Don&apos;t have an account?{' '}
                         <Link to="/register" className="underline">

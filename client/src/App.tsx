@@ -9,24 +9,29 @@ import RegisterPage from "@/pages/RegisterPage.tsx";
 import LoginPage from "@/pages/LoginPage.tsx";
 import {ListsProvider} from "@/hooks/ListsContext.tsx";
 import {TasksProvider} from "./hooks/TasksContext";
+import {RequireAuth} from "@/components/auth/RequireAuth.tsx";
+import {useAuth} from "./hooks/use-auth.hook";
 
 
 function App() {
-    // const token = localStorage.getItem('accessToken')
+    const {accessToken} = useAuth()
 
     return (
         <BrowserRouter>
             <ListsProvider>
                 <TasksProvider>
                     <Routes>
-                        <Route path="/" element={<Navigate to="/login" replace/>}/>
-
+                        <Route path="/" element={<Navigate to={accessToken ? "/dashboard" : "/login"} replace/>}/>
                         <Route path="/login" element={<LoginPage/>}/>
                         <Route path="/register" element={<RegisterPage/>}/>
 
                         <Route
-                            path="/dashboard"
-                            element={<Dashboard/>}
+                            path="/dashboard/*"
+                            element={
+                                <RequireAuth>
+                                    <Dashboard />
+                                </RequireAuth>
+                            }
                         />
                     </Routes>
                 </TasksProvider>

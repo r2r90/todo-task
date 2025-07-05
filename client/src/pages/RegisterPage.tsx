@@ -1,7 +1,9 @@
-import { z } from 'zod'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { useForm } from 'react-hook-form'
-import { toast } from 'sonner'
+// src/pages/RegisterPage.tsx
+import { z } from "zod"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { useForm } from "react-hook-form"
+import { toast } from "sonner"
+import { useNavigate } from "react-router-dom"
 
 import {
     Form,
@@ -10,50 +12,57 @@ import {
     FormItem,
     FormLabel,
     FormMessage,
-} from '@/components/ui/form'
-import { Button } from '@/components/ui/button'
+} from "@/components/ui/form"
+import { Button } from "@/components/ui/button"
 import {
     Card,
     CardContent,
     CardDescription,
     CardHeader,
     CardTitle,
-} from '@/components/ui/card'
-import { Input } from '@/components/ui/input'
+} from "@/components/ui/card"
+import { Input } from "@/components/ui/input"
+import { PasswordInput } from "@/components/ui/password-input"
+import { Link } from "react-router-dom"
 
+import { api } from "@/lib/api"
+import { registerFormSchema } from "../../../shared/validation/schemas"
 
+type RegisterValues = z.infer<typeof registerFormSchema>
 
-
-import {registerFormSchema} from "../../../shared/validation/schemas.ts";
-import { Link } from 'react-router-dom'
-import {PasswordInput} from "@/components/ui/password-input.tsx";
-
-const formSchema = registerFormSchema
-
-export default function RegisterPreview() {
-    const form = useForm<z.infer<typeof formSchema>>({
-        resolver: zodResolver(formSchema),
+export default function RegisterPage() {
+    const navigate = useNavigate()
+    const form = useForm<RegisterValues>({
+        resolver: zodResolver(registerFormSchema),
         defaultValues: {
-            firstName: '',
-            lastName: '',
-            email: '',
-            password: '',
-            confirmPassword: '',
+            firstName: "",
+            lastName: "",
+            email: "",
+            password: "",
+            confirmPassword: "",
         },
     })
 
-    async function onSubmit(values: z.infer<typeof formSchema>) {
+    async function onSubmit(values: RegisterValues) {
         try {
-            // Assuming an async registration function
-            console.log(values)
-            toast(
-                <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-          <code className="text-white">{JSON.stringify(values, null, 2)}</code>
-        </pre>,
-            )
-        } catch (error) {
-            console.error('Form submission error', error)
-            toast.error('Failed to submit the form. Please try again.')
+            // call your NestJS endpoint
+            await api.post("/auth/register", {
+                firstName:    values.firstName,
+                lastName:     values.lastName,
+                email:        values.email,
+                password:     values.password,
+            })
+            toast.success("Registration successful! Please log in.")
+            navigate("/login", { replace: true })
+        } catch (err: any) {
+            console.error("Registration error", err)
+            if (err.response?.status === 409) {
+                toast.error("Email is already in use.")
+            } else if (err.response?.data?.message) {
+                toast.error(err.response.data.message)
+            } else {
+                toast.error("Registration failed. Please try again.")
+            }
         }
     }
 
@@ -68,17 +77,23 @@ export default function RegisterPreview() {
                 </CardHeader>
                 <CardContent>
                     <Form {...form}>
-                        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+                        <form
+                            onSubmit={form.handleSubmit(onSubmit)}
+                            className="space-y-8"
+                        >
                             <div className="grid gap-4">
-                                {/* Name Field */}
                                 <FormField
                                     control={form.control}
                                     name="firstName"
                                     render={({ field }) => (
                                         <FormItem className="grid gap-2">
-                                            <FormLabel htmlFor="name">FirstName</FormLabel>
+                                            <FormLabel htmlFor="firstname">First Name</FormLabel>
                                             <FormControl>
-                                                <Input id="name" placeholder="John" {...field} />
+                                                <Input
+                                                    id="firstname"
+                                                    placeholder="John"
+                                                    {...field}
+                                                />
                                             </FormControl>
                                             <FormMessage />
                                         </FormItem>
@@ -90,28 +105,11 @@ export default function RegisterPreview() {
                                     name="lastName"
                                     render={({ field }) => (
                                         <FormItem className="grid gap-2">
-                                            <FormLabel htmlFor="name">Lastname</FormLabel>
-                                            <FormControl>
-                                                <Input id="name" placeholder="Doe" {...field} />
-                                            </FormControl>
-                                            <FormMessage />
-                                        </FormItem>
-                                    )}
-                                />
-
-                                {/* Email Field */}
-                                <FormField
-                                    control={form.control}
-                                    name="email"
-                                    render={({ field }) => (
-                                        <FormItem className="grid gap-2">
-                                            <FormLabel htmlFor="email">Email</FormLabel>
+                                            <FormLabel htmlFor="lastname">Last Name</FormLabel>
                                             <FormControl>
                                                 <Input
-                                                    id="email"
-                                                    placeholder="johndoe@mail.com"
-                                                    type="email"
-                                                    autoComplete="email"
+                                                    id="lastname"
+                                                    placeholder="Doe"
                                                     {...field}
                                                 />
                                             </FormControl>
@@ -120,8 +118,26 @@ export default function RegisterPreview() {
                                     )}
                                 />
 
+                                <FormField
+                                    control={form.control}
+                                    name="email"
+                                    render={({ field }) => (
+                                        <FormItem className="grid gap-2">
+                                            <FormLabel htmlFor="email">Email Address</FormLabel>
+                                            <FormControl>
+                                                <Input
+                                                    id="email"
+                                                    type="email"
+                                                    autoComplete="email"
+                                                    placeholder="johndoe@mail.com"
+                                                    {...field}
+                                                />
+                                            </FormControl>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
 
-                                {/* Password Field */}
                                 <FormField
                                     control={form.control}
                                     name="password"
@@ -131,7 +147,7 @@ export default function RegisterPreview() {
                                             <FormControl>
                                                 <PasswordInput
                                                     id="password"
-                                                    placeholder="******"
+                                                    placeholder="••••••••"
                                                     autoComplete="new-password"
                                                     {...field}
                                                 />
@@ -141,7 +157,6 @@ export default function RegisterPreview() {
                                     )}
                                 />
 
-                                {/* Confirm Password Field */}
                                 <FormField
                                     control={form.control}
                                     name="confirmPassword"
@@ -153,7 +168,7 @@ export default function RegisterPreview() {
                                             <FormControl>
                                                 <PasswordInput
                                                     id="confirmPassword"
-                                                    placeholder="******"
+                                                    placeholder="••••••••"
                                                     autoComplete="new-password"
                                                     {...field}
                                                 />
@@ -169,8 +184,9 @@ export default function RegisterPreview() {
                             </div>
                         </form>
                     </Form>
+
                     <div className="mt-4 text-center text-sm">
-                        Already have an account?{' '}
+                        Already have an account?{" "}
                         <Link to="/login" className="underline">
                             Login
                         </Link>
