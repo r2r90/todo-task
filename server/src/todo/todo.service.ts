@@ -9,9 +9,9 @@ export class TodoService {
     }
 
 
-    async createTodo(userId:string, dto: CreateTodoDto) {
-        const {todoListId, longDescription, dueDate, shortDescription} = dto;
-        const list = await this.getListById(todoListId);
+    async createTodo(userId: string, listId: string, dto: CreateTodoDto) {
+        const {longDescription, dueDate, shortDescription} = dto;
+        const list = await this.getListById(listId);
 
         if (list.ownerId !== userId) {
             throw new ForbiddenException('You do not have permission to add tasks to this list.');
@@ -22,13 +22,13 @@ export class TodoService {
                 shortDescription,
                 dueDate,
                 longDescription,
-                todoListId,
+                todoListId: listId,
             }
         })
     }
 
     async getTodoById(todoId: string) {
-        const todo =  await this.prismaService.todo.findUnique({
+        const todo = await this.prismaService.todo.findUnique({
             where: {id: todoId},
             include: {todoList: true},
         });
@@ -45,24 +45,24 @@ export class TodoService {
     }
 
 
-    async markTodoCompleted(userId, todoId) {
+    async markTodoCompleted(userId: string, todoId: string) {
         const todo = await this.getTodoById(todoId);
 
-        if ( todo.todoList!.ownerId !== userId) {
+        if (todo.todoList!.ownerId !== userId) {
             throw new ForbiddenException('You do not have permission to modify this todo.');
         }
 
         return this.prismaService.todo.update({
-            where: { id: todoId },
+            where: {id: todoId},
             data: {
                 completed: true,
             },
         });
     }
 
-    async deleteTodo(userId, todoId){
+    async deleteTodo(userId, todoId) {
         const todo = await this.getTodoById(todoId);
-        if ( todo.todoList!.ownerId !== userId) {
+        if (todo.todoList!.ownerId !== userId) {
             throw new ForbiddenException('You do not have permission to modify this todo.');
         }
 

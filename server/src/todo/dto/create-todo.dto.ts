@@ -16,7 +16,4 @@ export class CreateTodoDto {
     @IsDateString()
     dueDate: string;
 
-    @ApiProperty({ example: 'uuid-of-list' })
-    @IsUUID()
-    todoListId: string;
 }
