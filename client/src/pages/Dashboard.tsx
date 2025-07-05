@@ -1,9 +1,7 @@
 import {Separator} from "@/components/ui/separator"
 import {SidebarInset, SidebarProvider, SidebarTrigger,} from "@/components/ui/sidebar"
 import {LeftSidebar} from "@/components/left-sidebar/LeftSidebar.tsx";
-import Todo from "@/components/main/Todo.tsx";
 import TodoForm from "@/components/main/TodoForm.tsx";
-import TodoTable from "@/components/main/TodoTable.tsx";
 import {TasksTabs} from "@/components/main/TasksTabs.tsx";
 
 export default function Page() {

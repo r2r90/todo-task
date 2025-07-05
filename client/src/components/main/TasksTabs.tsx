@@ -54,7 +54,6 @@ export function TasksTabs() {
                     <TodoTable
                         items={mapForTable(activeTasks)}
                         onToggle={(id) => toggleComplete(id)}
-                        onEdit={(id) => editTask(id, {})}
                         onDelete={(id) => deleteTask(id)}
                         onAddSubtask={(id) => addSubtask(id)}
                     />
@@ -71,7 +70,6 @@ export function TasksTabs() {
                     <TodoTable
                         items={mapForTable(completedTasks)}
                         onToggle={(id) => toggleComplete(id)}
-                        onEdit={(id) => editTask(id, {})}
                         onDelete={(id) => deleteTask(id)}
                         onAddSubtask={(id) => addSubtask(id)}
                     />

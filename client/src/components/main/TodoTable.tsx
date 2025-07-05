@@ -1,4 +1,3 @@
-import * as React from "react"
 import Todo from "./Todo"
 import {
     Sheet,
@@ -54,52 +53,48 @@ export default function TodoTable({ items, onToggle, onDelete }: TodoTableProps)
 
                     <SheetContent>
                         <SheetHeader>
-                            <SheetTitle>Détails de la tâche</SheetTitle>
+                            <SheetTitle>Task Details</SheetTitle>
                             <SheetDescription>
-                                Ici vous pouvez voir et modifier les détails de la tâche.
+                                Here you can view and edit the details of the task.
                             </SheetDescription>
                         </SheetHeader>
 
                         <div className="space-y-4 px-4">
-                            <p><strong>Description courte :</strong> {task.shortDesc}</p>
+                            <p><strong>Short Description:</strong> {task.shortDesc}</p>
                             {task.longDesc && (
-                                <p><strong>Description longue :</strong> {task.longDesc}</p>
+                                <p><strong>Long Description:</strong> {task.longDesc}</p>
                             )}
-                            <p><strong>Date de création :</strong> {new Date(task.createdAt).toLocaleString()}</p>
-                            <p><strong>Date d’échéance :</strong> {new Date(task.dueDate).toLocaleString()}</p>
-                            <p><strong>Terminée :</strong> {task.completed ? "Oui" : "Non"}</p>
+                            <p><strong>Created At:</strong> {new Date(task.createdAt).toLocaleString()}</p>
+                            <p><strong>Due Date:</strong> {new Date(task.dueDate).toLocaleString()}</p>
+                            <p><strong>Completed:</strong> {task.completed ? "Yes" : "No"}</p>
                         </div>
 
                         <SheetFooter>
-                            {/* Confirmation avant suppression */}
                             <AlertDialog>
                                 <AlertDialogTrigger asChild>
                                     <Button variant="destructive">
-                                        Supprimer la tâche
+                                        Delete Task
                                     </Button>
                                 </AlertDialogTrigger>
-
                                 <AlertDialogContent>
                                     <AlertDialogHeader>
-                                        <AlertDialogTitle>Supprimer cette tâche ?</AlertDialogTitle>
+                                        <AlertDialogTitle>Delete this task?</AlertDialogTitle>
                                         <AlertDialogDescription>
-                                            Cette action est irréversible et retirera définitivement la tâche.
+                                            This action cannot be undone and will permanently remove the task.
                                         </AlertDialogDescription>
                                     </AlertDialogHeader>
                                     <AlertDialogFooter>
-                                        <AlertDialogCancel>Annuler</AlertDialogCancel>
+                                        <AlertDialogCancel>Cancel</AlertDialogCancel>
                                         <AlertDialogAction
                                             onClick={() => onDelete(task.id)}
                                         >
-                                            Confirmer
+                                            Confirm
                                         </AlertDialogAction>
                                     </AlertDialogFooter>
                                 </AlertDialogContent>
                             </AlertDialog>
-
-                            {/* Bouton pour fermer le sheet */}
                             <SheetClose asChild>
-                                <Button variant="outline">Fermer</Button>
+                                <Button variant="outline">Close</Button>
                             </SheetClose>
                         </SheetFooter>
                     </SheetContent>
