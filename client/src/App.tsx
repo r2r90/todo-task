@@ -10,7 +10,7 @@ import LoginPage from "@/pages/LoginPage.tsx";
 
 
 function App() {
-    const token = localStorage.getItem('accessToken')
+    // const token = localStorage.getItem('accessToken')
 
     return (
         <BrowserRouter>
@@ -18,12 +18,12 @@ function App() {
 
                 <Route path="/" element={<Navigate to="/login" replace/>}/>
 
-                <Route path="/login" element={<LoginPage />}/>
+                <Route path="/login" element={<LoginPage/>}/>
                 <Route path="/register" element={<RegisterPage/>}/>
 
                 <Route
-                    path="/*"
-                    element={token ? <Dashboard/> : <Navigate to="/login" replace/>}
+                    path="/dashboard"
+                    element={<Dashboard/>}
                 />
             </Routes>
         </BrowserRouter>
