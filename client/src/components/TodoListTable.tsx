@@ -1,57 +1,40 @@
-import {ReactNode} from "react";
-import {Card, CardContent} from "@/components/ui/card.tsx";
-import { Button } from "./ui/button";
-import {Trash2} from "lucide-react";
+import * as React from "react"
+import {ScrollArea} from "@/components/ui/scroll-area"
+import {TodoListItem, type TaskList} from "./TodoListItem"
 
-const lists = [
-    {
-        id: "list-1",               // unique identifier for the list
-        title: "Work",               // list name
-    },
-    {
-        id: "list-2",
-        title: "Personal",
-    },
-]
-
-function ScrollArea(props: { className: string, children: ReactNode }) {
-    return null;
+interface TodoListTableProps {
+    lists: TaskList[]
+    activeListId: string | null
+    onSelect: (id: string) => void
+    onDelete: (id: string) => void
 }
 
-export function TodoList() {
+export function TodoListTable({
+                                  lists,
+                                  activeListId,
+                                  onSelect,
+                                  onDelete,
+                              }: TodoListTableProps) {
     return (
-        <ScrollArea className="flex-1 px-2">
-            {lists.map((list) => (
-                <Card
-                    key={list.id}
-                    onClick={() => onSelect(list.id)}
-                    className={`
-              mb-2 cursor-pointer
-              ${list.id === activeListId ? "border-2 border-primary" : ""}
-            `}
-                >
-                    <CardContent className="flex items-center justify-between p-3">
-                        <span>{list.name}</span>
-                        <Button
-                            size="icon"
-                            variant="ghost"
-                            onClick={(e) => {
-                                e.stopPropagation()
-                                if (confirm("Deleting this list will remove all its tasks. Continue?")) {
-                                    onDelete(list.id)
-                                }
-                            }}
-                        >
-                            <Trash2 size={16} />
-                        </Button>
-                    </CardContent>
-                </Card>
-            ))}
-            {lists.length === 0 && (
-                <p className="p-4 text-sm text-muted-foreground">
-                    You haven’t created any lists yet.
-                </p>
-            )}
+        <ScrollArea className="h-full overflow-auto px-2">
+            <div className="p-4">
+                <h4 className="mb-4 text-sm font-medium">Todo Lists</h4>
+
+                {lists.length === 0 ? (
+                    <p className="text-sm text-muted-foreground">No lists yet.</p>
+                ) : (
+                    lists.map((list, idx) => (
+                        <TodoListItem
+                            key={list.id}
+                            list={list}
+                            isActive={list.id === activeListId}
+                            onSelect={onSelect}
+                            onDelete={onDelete}
+                            showSeparator={idx < lists.length - 1}
+                        />
+                    ))
+                )}
+            </div>
         </ScrollArea>
     )
 }
