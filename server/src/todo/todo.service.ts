@@ -45,7 +45,7 @@ export class TodoService {
     }
 
 
-    async markTodoCompleted(userId: string, todoId: string) {
+    async updateTask(userId: string, todoId: string) {
         const todo = await this.getTodoById(todoId);
 
         if (todo.todoList!.ownerId !== userId) {
@@ -55,7 +55,7 @@ export class TodoService {
         return this.prismaService.todo.update({
             where: {id: todoId},
             data: {
-                completed: true,
+                completed: !todo.completed,
             },
         });
     }

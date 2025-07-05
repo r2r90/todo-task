@@ -1,12 +1,12 @@
 import * as React from "react"
-import { useLists } from "@/hooks/ListsContext"
-import { useTasks } from "@/hooks/TasksContext"
-import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs"
+import {useLists} from "@/hooks/ListsContext"
+import {useTasks} from "@/hooks/TasksContext"
+import {Tabs, TabsList, TabsTrigger, TabsContent} from "@/components/ui/tabs"
 import TodoTable from "@/components/main/TodoTable"
 
 export function TasksTabs() {
-    const { activeListId } = useLists()
-    const { tasks, loadTasks, toggleComplete, deleteTask, editTask, addSubtask } =
+    const {activeListId} = useLists()
+    const {tasks, loadTasks, toggleComplete, deleteTask,} =
         useTasks()
 
     // Reload tasks whenever the selected list changes
@@ -35,10 +35,10 @@ export function TasksTabs() {
         <Tabs defaultValue="active" className="flex flex-col h-full">
             <TabsList>
                 <TabsTrigger value="active">
-                    To Do ({activeTasks.length})
+                    To Do {activeTasks.length}
                 </TabsTrigger>
                 <TabsTrigger value="completed">
-                    Completed ({completedTasks.length})
+                    Completed {completedTasks.length}
                 </TabsTrigger>
             </TabsList>
 
@@ -47,7 +47,7 @@ export function TasksTabs() {
                 {activeTasks.length === 0 ? (
                     <p className="text-center text-sm text-muted-foreground">
                         No tasks in this list yet.
-                        <br />
+                        <br/>
                         Start by adding your first task below.
                     </p>
                 ) : (
@@ -55,7 +55,6 @@ export function TasksTabs() {
                         items={mapForTable(activeTasks)}
                         onToggle={(id) => toggleComplete(id)}
                         onDelete={(id) => deleteTask(id)}
-                        onAddSubtask={(id) => addSubtask(id)}
                     />
                 )}
             </TabsContent>
@@ -71,7 +70,6 @@ export function TasksTabs() {
                         items={mapForTable(completedTasks)}
                         onToggle={(id) => toggleComplete(id)}
                         onDelete={(id) => deleteTask(id)}
-                        onAddSubtask={(id) => addSubtask(id)}
                     />
                 )}
             </TabsContent>

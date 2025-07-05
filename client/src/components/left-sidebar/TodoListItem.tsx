@@ -35,7 +35,7 @@ export function TodoListItem({
                 className={`
           flex items-center gap-3
           ${isActive ? "border-primary" : "border-gray-200 hover:bg-muted/50"}
-          border rounded-xl px-3 py-1 w-full cursor-pointer
+          border rounded-md px-3 py-1 w-full cursor-pointer
         `}
             >
                 <div className="w-full text-sm truncate">{list.title}</div>
@@ -44,7 +44,8 @@ export function TodoListItem({
                 <AlertDialog>
                     <AlertDialogTrigger asChild>
                         <button
-                            className="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus:outline-none focus:ring-1 focus:ring-ring disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-9 w-9"
+                            className="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus:outline-none focus:ring-1
+                                        focus:ring-ring disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-9 w-9"
                             onClick={(e) => e.stopPropagation()}
                         >
                             {/* trash icon */}

@@ -1,9 +1,9 @@
-import { toast } from "sonner"
-import { useForm } from "react-hook-form"
-import { zodResolver } from "@hookform/resolvers/zod"
-import { z } from "zod"
+import {toast} from "sonner"
+import {useForm} from "react-hook-form"
+import {zodResolver} from "@hookform/resolvers/zod"
+import {z} from "zod"
 
-import { Button } from "@/components/ui/button"
+import {Button} from "@/components/ui/button"
 import {
     Form,
     FormControl,
@@ -13,25 +13,25 @@ import {
     FormLabel,
     FormMessage,
 } from "@/components/ui/form"
-import { Input } from "@/components/ui/input"
-import { Textarea } from "@/components/ui/textarea"
-import { DatetimePicker } from "@/components/ui/DateTimePicker"
+import {Input} from "@/components/ui/input"
+import {Textarea} from "@/components/ui/textarea"
+import {SmartDatetimeInput} from "@/components/ui/SmartDatetimeInput"
 
-import { useTasks } from "@/hooks/TasksContext"
-import { useLists } from "@/hooks/ListsContext"
+import {useTasks} from "@/hooks/TasksContext"
+import {useLists} from "@/hooks/ListsContext"
 
 // Zod schema
 const formSchema = z.object({
     shortDesc: z.string().min(1, "Short description is required"),
     longDesc: z.string().optional(),
-    dueDate: z.coerce.date({ invalid_type_error: "Invalid due date" }),
+    dueDate: z.coerce.date({invalid_type_error: "Invalid due date"}),
 })
 
 export type TodoFormValues = z.infer<typeof formSchema>
 
 export default function TodoForm() {
-    const { activeListId } = useLists()
-    const { createTask, loadTasks } = useTasks()
+    const {activeListId} = useLists()
+    const {createTask, loadTasks} = useTasks()
 
     const form = useForm<TodoFormValues>({
         resolver: zodResolver(formSchema),
@@ -77,14 +77,14 @@ export default function TodoForm() {
                     <FormField
                         control={form.control}
                         name="shortDesc"
-                        render={({ field }) => (
+                        render={({field}) => (
                             <FormItem>
                                 <FormLabel>Short Description *</FormLabel>
                                 <FormControl>
                                     <Input placeholder="Task title" {...field} />
                                 </FormControl>
                                 <FormDescription>Enter a brief title.</FormDescription>
-                                <FormMessage />
+                                <FormMessage/>
                             </FormItem>
                         )}
                     />
@@ -93,14 +93,14 @@ export default function TodoForm() {
                     <FormField
                         control={form.control}
                         name="longDesc"
-                        render={({ field }) => (
+                        render={({field}) => (
                             <FormItem>
                                 <FormLabel>Long Description</FormLabel>
                                 <FormControl>
                                     <Textarea placeholder="Details (optional)" rows={4} {...field} />
                                 </FormControl>
                                 <FormDescription>Any extra details.</FormDescription>
-                                <FormMessage />
+                                <FormMessage/>
                             </FormItem>
                         )}
                     />
@@ -109,20 +109,19 @@ export default function TodoForm() {
                     <FormField
                         control={form.control}
                         name="dueDate"
-                        render={({ field }) => (
+                        render={({field}) => (
                             <FormItem className="flex flex-col">
                                 <FormLabel>Due Date *</FormLabel>
-                                <FormControl>
-                                    <DatetimePicker
-                                        {...field}
-                                        format={[
-                                            ["years", "months", "days"],
-                                            ["hours", "minutes", "am/pm"],
-                                        ]}
-                                    />
-                                </FormControl>
+                                <SmartDatetimeInput
+                                    name="datetime"
+                                    value={field.value}
+                                    onValueChange={(date) => field.onChange(date)}
+                                    onChange={field.onChange}
+                                    placeholder="e.g. tomorrow at 3pm"
+                                    disabled={(date) => date < new Date()}
+                                />
                                 <FormDescription>Select deadline.</FormDescription>
-                                <FormMessage />
+                                <FormMessage/>
                             </FormItem>
                         )}
                     />

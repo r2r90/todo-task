@@ -21,7 +21,7 @@ export default function Todo({shortDesc, onToggleComplete}: TodoProps) {
                     {shortDesc}
                 </div>
             </div>
-            <Button onClick={onToggleComplete}/>
+            <Button variant="outline" onClick={onToggleComplete}>Done</Button>
         </div>
     )
 }

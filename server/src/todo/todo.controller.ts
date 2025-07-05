@@ -50,8 +50,8 @@ export class TodoController {
     @ApiForbiddenResponse({description: 'No permission to modify this task.'})
     @ApiNotFoundResponse({description: 'Todo task not found.'})
     @Patch(':id')
-    async markCompleted(@Authorized('id') userId: string, @Param('id') todoId: string) {
-        return this.todoService.markTodoCompleted(userId, todoId);
+    async update(@Authorized('id') userId: string, @Param('id') todoId: string) {
+        return this.todoService.updateTask(userId, todoId);
     }
 
     @Authorization()
