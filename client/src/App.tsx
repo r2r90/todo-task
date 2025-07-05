@@ -1,5 +1,5 @@
 import Dashboard from "@/pages/Dashboard.tsx";
-import {BrowserRouter, Route, Routes,} from 'react-router-dom';
+import {BrowserRouter, Navigate, Route, Routes,} from 'react-router-dom';
 import RegisterPage from "@/pages/RegisterPage.tsx";
 import LoginPage from "@/pages/LoginPage.tsx";
 import {ListsProvider} from "@/hooks/ListsContext.tsx";
@@ -13,7 +13,7 @@ function App() {
         <BrowserRouter>
             <Toaster position="top-center" />
             <Routes>
-
+                <Route path="*" element={<Navigate to="/login" replace />} />
                 <Route path="/login" element={<LoginPage/>}/>
                 <Route path="/register" element={<RegisterPage/>}/>
 

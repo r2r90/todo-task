@@ -30,6 +30,7 @@ export function TodoListTable({lists, activeListId, onSelect, onDelete,}: TodoLi
                     ))
                 )}
             </div>
+
         </ScrollArea>
     )
 }

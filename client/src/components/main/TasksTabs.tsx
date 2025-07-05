@@ -6,8 +6,17 @@ import TodoTable from "@/components/main/TodoTable"
 
 export function TasksTabs() {
     const {activeListId} = useLists()
-    const {tasks, loadTasks, toggleComplete, deleteTask,} =
+    const {tasks, loadTasks, toggleComplete, deleteTask} =
         useTasks()
+
+    if (!activeListId) {
+        return (
+            <div className="flex flex-1 items-center justify-center text-muted-foreground p-4 text-center">
+                No list selected — please select a list on the left.
+            </div>
+        )
+    }
+
 
     // Reload tasks whenever the selected list changes
     React.useEffect(() => {
