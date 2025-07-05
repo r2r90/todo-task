@@ -1,8 +1,9 @@
-import {toast} from "sonner"
-import {useForm} from "react-hook-form"
-import {zodResolver} from "@hookform/resolvers/zod"
-import {z} from "zod"
-import {Button} from "@/components/ui/button"
+import { toast } from "sonner"
+import { useForm } from "react-hook-form"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { z } from "zod"
+
+import { Button } from "@/components/ui/button"
 import {
     Form,
     FormControl,
@@ -12,22 +13,26 @@ import {
     FormLabel,
     FormMessage,
 } from "@/components/ui/form"
-import {Input} from "@/components/ui/input"
-import {Textarea} from "@/components/ui/textarea"
-import {DatetimePicker} from "@/components/ui/DateTimePicker"
+import { Input } from "@/components/ui/input"
+import { Textarea } from "@/components/ui/textarea"
+import { DatetimePicker } from "@/components/ui/DateTimePicker"
 
-// 1. Новая схема валидации
+import { useTasks } from "@/hooks/TasksContext"
+import { useLists } from "@/hooks/ListsContext"
+
+// Zod schema
 const formSchema = z.object({
-    shortDesc: z.string().min(1, "La description courte est requise"),
+    shortDesc: z.string().min(1, "Short description is required"),
     longDesc: z.string().optional(),
-    dueDate: z.coerce.date({
-        invalid_type_error: "Date d’échéance invalide",
-    }),
+    dueDate: z.coerce.date({ invalid_type_error: "Invalid due date" }),
 })
 
 export type TodoFormValues = z.infer<typeof formSchema>
 
 export default function TodoForm() {
+    const { activeListId } = useLists()
+    const { createTask, loadTasks } = useTasks()
+
     const form = useForm<TodoFormValues>({
         resolver: zodResolver(formSchema),
         defaultValues: {
@@ -37,21 +42,27 @@ export default function TodoForm() {
         },
     })
 
-    function onSubmit(values: TodoFormValues) {
+    // onSubmit now matches server DTO
+    async function onSubmit(values: TodoFormValues) {
+        if (!activeListId) {
+            toast.error("Please select a list first.")
+            return
+        }
+
         try {
-            console.log(values)
-            toast.success("Tâche ajoutée !", {
-                description: (
-                    <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-            <code className="text-white">
-              {JSON.stringify(values, null, 2)}
-            </code>
-          </pre>
-                ),
+            await createTask(activeListId, {
+                shortDescription: values.shortDesc,
+                longDescription: values.longDesc,
+                dueDate: values.dueDate.toISOString(),
             })
-        } catch (error) {
-            console.error("Form submission error", error)
-            toast.error("Échec de la soumission. Réessayez.")
+
+            // refresh list
+            await loadTasks(activeListId)
+
+            toast.success("Task added!")
+            form.reset()
+        } catch (err) {
+            toast.error("Could not add task. Please try again.")
         }
     }
 
@@ -62,56 +73,45 @@ export default function TodoForm() {
                     onSubmit={form.handleSubmit(onSubmit)}
                     className="space-y-8 max-w-3xl mx-auto"
                 >
-                    {/* Description courte */}
+                    {/* Short Description */}
                     <FormField
                         control={form.control}
                         name="shortDesc"
-                        render={({field}) => (
+                        render={({ field }) => (
                             <FormItem>
-                                <FormLabel>Description courte *</FormLabel>
+                                <FormLabel>Short Description *</FormLabel>
                                 <FormControl>
-                                    <Input
-                                        placeholder="Titre de la tâche"
-                                        {...field}
-                                    />
+                                    <Input placeholder="Task title" {...field} />
                                 </FormControl>
-                                <FormDescription>
-                                    Entrez une description brève de la tâche.
-                                </FormDescription>
-                                <FormMessage/>
+                                <FormDescription>Enter a brief title.</FormDescription>
+                                <FormMessage />
                             </FormItem>
                         )}
                     />
 
-                    {/* Description longue */}
+                    {/* Long Description */}
                     <FormField
                         control={form.control}
                         name="longDesc"
-                        render={({field}) => (
+                        render={({ field }) => (
                             <FormItem>
-                                <FormLabel>Description longue</FormLabel>
+                                <FormLabel>Long Description</FormLabel>
                                 <FormControl>
-                                    <Textarea
-                                        placeholder="Détails (optionnel)"
-                                        rows={4}
-                                        {...field}
-                                    />
+                                    <Textarea placeholder="Details (optional)" rows={4} {...field} />
                                 </FormControl>
-                                <FormDescription>
-                                    Fournissez plus de détails si nécessaire.
-                                </FormDescription>
-                                <FormMessage/>
+                                <FormDescription>Any extra details.</FormDescription>
+                                <FormMessage />
                             </FormItem>
                         )}
                     />
 
-                    {/* Date d’échéance */}
+                    {/* Due Date */}
                     <FormField
                         control={form.control}
                         name="dueDate"
-                        render={({field}) => (
+                        render={({ field }) => (
                             <FormItem className="flex flex-col">
-                                <FormLabel>Date d’échéance *</FormLabel>
+                                <FormLabel>Due Date *</FormLabel>
                                 <FormControl>
                                     <DatetimePicker
                                         {...field}
@@ -121,15 +121,13 @@ export default function TodoForm() {
                                         ]}
                                     />
                                 </FormControl>
-                                <FormDescription>
-                                    Sélectionnez la date et l’heure limite.
-                                </FormDescription>
-                                <FormMessage/>
+                                <FormDescription>Select deadline.</FormDescription>
+                                <FormMessage />
                             </FormItem>
                         )}
                     />
 
-                    <Button type="submit">Ajouter la tâche</Button>
+                    <Button type="submit">Add Task</Button>
                 </form>
             </div>
         </Form>

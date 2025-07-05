@@ -1,4 +1,4 @@
-import {Body, Controller, Delete, Get, Param, Patch, Post} from '@nestjs/common';
+import {Body, Controller, Delete, Get, Param, ParseUUIDPipe, Patch, Post} from '@nestjs/common';
 import {TodoService} from './todo.service';
 import {Authorization} from "@/auth/decorators/authorization.decorator";
 import {Authorized} from "@/auth/decorators/authorized.decorator";
@@ -38,7 +38,7 @@ export class TodoController {
     @ApiNotFoundResponse({description: 'Todo list not found.'})
     async getTodosInList(
         @Authorized('id') userId: string,
-        @Param('listId') listId: string,
+        @Param('listId', new ParseUUIDPipe()) listId: string,
     ) {
         return this.todoService.getTodosInList(userId, listId);
     }

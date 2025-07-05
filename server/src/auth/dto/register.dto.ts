@@ -41,24 +41,18 @@ export class RegisterDto {
         example: 'Password123!',
         description:
             'User password (8-20 chars, 1 uppercase, 1 lowercase, 1 digit, 1 special)',
-        minLength: 8,
-        maxLength: 20,
     })
-    @IsNotEmpty({message: 'Password cannot be empty.'})
-    @IsString({message: 'Password must be a string.'})
-    @MinLength(8, {message: 'Password must be at least 8 characters.'})
-    @MaxLength(20, {message: 'Password must be at most 20 characters.'})
-    @Matches(/(?=.*[A-Z])/, {
-        message: 'Password must contain at least one uppercase letter.',
-    })
-    @Matches(/(?=.*[a-z])/, {
-        message: 'Password must contain at least one lowercase letter.',
-    })
-    @Matches(/(?=.*\d)/, {
-        message: 'Password must contain at least one digit.',
-    })
-    @Matches(/[$&+,:;=?@#|'<>.^*()%!-]/, {
-        message: 'Password must contain at least one special character.',
-    })
+    @IsNotEmpty({ message: 'Password cannot be empty.' })
+    @IsString({ message: 'Password must be a string.' })
+
+    @Matches(
+        /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[!@#$%^&*()_\-+={}[\]|\\:;"'<>,.?/~`]).{8,20}$/,
+        {
+            message:
+                'Password must be 8–20 chars, with at least one uppercase, one lowercase, one digit and one special character.',
+        },
+    )
+    @MinLength(8, { message: 'Password must be at least 8 characters.' })
+    @MaxLength(20, { message: 'Password must be at most 20 characters.' })
     password: string
 }
