@@ -1,5 +1,6 @@
 import {ScrollArea} from "@/components/ui/scroll-area.tsx"
-import {TodoListItem, type TaskList} from "./TodoListItem.tsx"
+import {TodoListItem} from "./TodoListItem.tsx"
+import type {TaskList} from "@/hooks/ListsContext";
 
 interface TodoListTableProps {
     lists: TaskList[]
@@ -8,12 +9,7 @@ interface TodoListTableProps {
     onDelete: (id: string) => void
 }
 
-export function TodoListTable({
-                                  lists,
-                                  activeListId,
-                                  onSelect,
-                                  onDelete,
-                              }: TodoListTableProps) {
+export function TodoListTable({lists, activeListId, onSelect, onDelete,}: TodoListTableProps) {
     return (
         <ScrollArea className="h-full overflow-auto px-2">
             <div className="p-4">

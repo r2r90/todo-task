@@ -5,12 +5,15 @@ import LoginPage from "@/pages/LoginPage.tsx";
 import {ListsProvider} from "@/hooks/ListsContext.tsx";
 import {TasksProvider} from "./hooks/TasksContext";
 import {RequireAuth} from "@/components/auth/RequireAuth.tsx";
+import {Toaster} from "sonner";
 
 
 function App() {
     return (
         <BrowserRouter>
+            <Toaster position="top-center" />
             <Routes>
+
                 <Route path="/login" element={<LoginPage/>}/>
                 <Route path="/register" element={<RegisterPage/>}/>
 

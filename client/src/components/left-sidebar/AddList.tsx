@@ -12,6 +12,7 @@ import {
 import {Button} from "../ui/button.tsx"
 import {Input} from "../ui/input.tsx"
 import {Label} from "../ui/label.tsx"
+import {toast} from "sonner";
 
 interface AddListProps {
     onCreate: (title: string) => void
@@ -28,6 +29,7 @@ export default function AddList({onCreate}: AddListProps) {
         onCreate(title)
         setNewListTitle("")
         setOpen(false)
+        toast.success("Task List Created Successfully")
     }
 
     return (

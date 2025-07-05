@@ -1,10 +1,11 @@
 import * as React from "react"
-import { api } from "@/lib/api"
-import {useAuth} from "@/hooks/use-auth.hook.ts";       // your axios instance
+import {api} from "@/lib/api"
+import {useAuth} from "@/hooks/use-auth.hook.ts";
+import {toast} from "sonner";       // your axios instance
 
 export interface TaskList {
     id: string
-    name: string
+    title: string
 }
 
 interface ListsContextValue {
@@ -22,7 +23,7 @@ const ListsContext = React.createContext<ListsContextValue | undefined>(
 export const ListsProvider: React.FC<React.PropsWithChildren<{}>> = ({
                                                                          children,
                                                                      }) => {
-    const { accessToken } = useAuth()
+    const {accessToken} = useAuth()
     const [lists, setLists] = React.useState<TaskList[]>([])
     const [activeListId, setActiveListId] = React.useState<string | null>(null)
 
@@ -30,10 +31,10 @@ export const ListsProvider: React.FC<React.PropsWithChildren<{}>> = ({
     // Fetch existing lists on mount
     React.useEffect(() => {
         if (!accessToken) return
-            ;(async () => {
+        (async () => {
             try {
                 const res = await api.get<TaskList[]>("/todo/list", {
-                    headers: { Authorization: `Bearer ${accessToken}` },
+                    headers: {Authorization: `Bearer ${accessToken}`},
                 })
                 setLists(res.data)
                 if (res.data.length) setActiveListId(res.data[0].id)
@@ -50,8 +51,8 @@ export const ListsProvider: React.FC<React.PropsWithChildren<{}>> = ({
             try {
                 const res = await api.post<TaskList>(
                     "/todo/list",
-                    { title: name },
-                    { headers: { Authorization: `Bearer ${accessToken}` } },
+                    {title: name},
+                    {headers: {Authorization: `Bearer ${accessToken}`}},
                 )
                 setLists((prev) => [...prev, res.data])
                 setActiveListId(res.data.id)
@@ -77,9 +78,10 @@ export const ListsProvider: React.FC<React.PropsWithChildren<{}>> = ({
             if (!accessToken) throw new Error("Not authenticated")
             try {
                 await api.delete(`/todo/list/${id}`, {
-                    headers: { Authorization: `Bearer ${accessToken}` },
+                    headers: {Authorization: `Bearer ${accessToken}`},
                 })
                 setLists((prev) => prev.filter((l) => l.id !== id))
+                toast.success('List Successfully deleted.')
                 setActiveListId((prev) => (prev === id ? null : prev))
             } catch (err) {
                 console.error("Failed to delete list", err)

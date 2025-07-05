@@ -11,7 +11,7 @@ import {
     AlertDialogTitle,
     AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
-import type {TaskList} from "./TodoListItem"
+import type {TaskList} from "@/hooks/ListsContext"
 
 interface TodoListItemProps {
     list: TaskList
@@ -28,8 +28,6 @@ export function TodoListItem({
                                  onDelete,
                                  showSeparator,
                              }: TodoListItemProps) {
-
-
     return (
         <React.Fragment>
             <div
@@ -42,14 +40,14 @@ export function TodoListItem({
             >
                 <div className="w-full text-sm truncate">{list.title}</div>
 
-                {/* AlertDialog encapsule le bouton Supprimer */}
+                {/* AlertDialog wraps the delete button */}
                 <AlertDialog>
                     <AlertDialogTrigger asChild>
                         <button
                             className="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus:outline-none focus:ring-1 focus:ring-ring disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-9 w-9"
                             onClick={(e) => e.stopPropagation()}
                         >
-                            {/* icône corbeille */}
+                            {/* trash icon */}
                             <svg
                                 stroke="currentColor"
                                 fill="none"
@@ -70,20 +68,19 @@ export function TodoListItem({
 
                     <AlertDialogContent>
                         <AlertDialogHeader>
-                            <AlertDialogTitle>Supprimer la liste ?</AlertDialogTitle>
+                            <AlertDialogTitle>Delete this list?</AlertDialogTitle>
                             <AlertDialogDescription>
-                                Toutes les tâches de « {list.title} » seront également supprimées. Cette action est
-                                irréversible.
+                                All tasks from “{list.title}” will also be deleted. This action cannot be undone.
                             </AlertDialogDescription>
                         </AlertDialogHeader>
                         <AlertDialogFooter>
-                            <AlertDialogCancel>Annuler</AlertDialogCancel>
+                            <AlertDialogCancel>Cancel</AlertDialogCancel>
                             <AlertDialogAction
                                 onClick={() => {
                                     onDelete(list.id)
                                 }}
                             >
-                                Supprimer
+                                Delete
                             </AlertDialogAction>
                         </AlertDialogFooter>
                     </AlertDialogContent>

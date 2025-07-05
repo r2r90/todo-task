@@ -18,6 +18,7 @@
   },
   "include": [
     "src/**/*.ts",
-    "declarations.d.ts"
+    "src/**/*.tsx",
+    "src/**/*.d.ts"
   ]
 }
