@@ -26,7 +26,7 @@ import { PasswordInput } from "@/components/ui/password-input"
 import { Link } from "react-router-dom"
 
 import { api } from "@/lib/api"
-import { registerFormSchema } from "../../../shared/validation/schemas"
+import { registerFormSchema } from "@/shared/validation/schemas"
 
 type RegisterValues = z.infer<typeof registerFormSchema>
 

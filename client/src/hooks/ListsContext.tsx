@@ -1,4 +1,6 @@
 import * as React from "react"
+import { api } from "@/lib/api"
+import {useAuth} from "@/hooks/use-auth.hook.ts";       // your axios instance
 
 export interface TaskList {
     id: string
@@ -8,34 +10,94 @@ export interface TaskList {
 interface ListsContextValue {
     lists: TaskList[]
     activeListId: string | null
-    createList: (name: string) => void
+    createList: (name: string) => Promise<void>
     selectList: (id: string) => void
-    deleteList: (id: string) => void
+    deleteList: (id: string) => Promise<void>
 }
 
-const ListsContext = React.createContext<ListsContextValue | undefined>(undefined)
+const ListsContext = React.createContext<ListsContextValue | undefined>(
+    undefined,
+)
 
-export const ListsProvider: React.FC<React.PropsWithChildren<{}>> = ({ children }) => {
+export const ListsProvider: React.FC<React.PropsWithChildren<{}>> = ({
+                                                                         children,
+                                                                     }) => {
+    const { accessToken } = useAuth()
     const [lists, setLists] = React.useState<TaskList[]>([])
     const [activeListId, setActiveListId] = React.useState<string | null>(null)
 
-    const createList = React.useCallback((name: string) => {
-        const newList = { id: `list-${Date.now()}`, name }
-        setLists(prev => [...prev, newList])
-        setActiveListId(newList.id)
-    }, [])
 
+    // Fetch existing lists on mount
+    React.useEffect(() => {
+        if (!accessToken) return
+            ;(async () => {
+            try {
+                const res = await api.get<TaskList[]>("/todo/list", {
+                    headers: { Authorization: `Bearer ${accessToken}` },
+                })
+                setLists(res.data)
+                if (res.data.length) setActiveListId(res.data[0].id)
+            } catch (err) {
+                console.error("Failed to fetch lists", err)
+            }
+        })()
+    }, [accessToken])
+
+    // Create
+    const createList = React.useCallback(
+        async (name: string) => {
+            if (!accessToken) throw new Error("Not authenticated")
+            try {
+                const res = await api.post<TaskList>(
+                    "/todo/list",
+                    { title: name },
+                    { headers: { Authorization: `Bearer ${accessToken}` } },
+                )
+                setLists((prev) => [...prev, res.data])
+                setActiveListId(res.data.id)
+            } catch (err: any) {
+                if (err.response?.status === 409) {
+                    alert("A list with that name already exists.")
+                } else {
+                    console.error("Failed to create list", err)
+                }
+            }
+        },
+        [accessToken],
+    )
+
+    // Select
     const selectList = React.useCallback((id: string) => {
         setActiveListId(id)
     }, [])
 
-    const deleteList = React.useCallback((id: string) => {
-        setLists(prev => prev.filter(l => l.id !== id))
-        setActiveListId(prev => (prev === id ? null : prev))
-    }, [])
+    // Delete
+    const deleteList = React.useCallback(
+        async (id: string) => {
+            if (!accessToken) throw new Error("Not authenticated")
+            try {
+                await api.delete(`/todo/list/${id}`, {
+                    headers: { Authorization: `Bearer ${accessToken}` },
+                })
+                setLists((prev) => prev.filter((l) => l.id !== id))
+                setActiveListId((prev) => (prev === id ? null : prev))
+            } catch (err) {
+                console.error("Failed to delete list", err)
+            }
+        },
+        [accessToken],
+    )
 
     return (
-        <ListsContext.Provider value={{ lists, activeListId, createList, selectList, deleteList }}>
+        <ListsContext.Provider
+            value={{
+                lists,
+                activeListId,
+                createList,
+                selectList,
+                deleteList,
+            }}
+        >
             {children}
         </ListsContext.Provider>
     )

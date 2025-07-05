@@ -28,6 +28,8 @@ export function TodoListItem({
                                  onDelete,
                                  showSeparator,
                              }: TodoListItemProps) {
+
+
     return (
         <React.Fragment>
             <div
@@ -38,7 +40,7 @@ export function TodoListItem({
           border rounded-xl px-3 py-1 w-full cursor-pointer
         `}
             >
-                <div className="w-full text-sm truncate">{list.name}</div>
+                <div className="w-full text-sm truncate">{list.title}</div>
 
                 {/* AlertDialog encapsule le bouton Supprimer */}
                 <AlertDialog>
@@ -57,11 +59,11 @@ export function TodoListItem({
                                 strokeLinejoin="round"
                                 className="h-5 w-5"
                             >
-                                <path d="M3 6h18" />
-                                <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6" />
-                                <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2" />
-                                <line x1="10" y1="11" x2="10" y2="17" />
-                                <line x1="14" y1="11" x2="14" y2="17" />
+                                <path d="M3 6h18"/>
+                                <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/>
+                                <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/>
+                                <line x1="10" y1="11" x2="10" y2="17"/>
+                                <line x1="14" y1="11" x2="14" y2="17"/>
                             </svg>
                         </button>
                     </AlertDialogTrigger>
@@ -70,7 +72,8 @@ export function TodoListItem({
                         <AlertDialogHeader>
                             <AlertDialogTitle>Supprimer la liste ?</AlertDialogTitle>
                             <AlertDialogDescription>
-                                Toutes les tâches de « {list.name} » seront également supprimées. Cette action est irréversible.
+                                Toutes les tâches de « {list.title} » seront également supprimées. Cette action est
+                                irréversible.
                             </AlertDialogDescription>
                         </AlertDialogHeader>
                         <AlertDialogFooter>
@@ -87,7 +90,7 @@ export function TodoListItem({
                 </AlertDialog>
             </div>
 
-            {showSeparator && <Separator className="my-1" />}
+            {showSeparator && <Separator className="my-1"/>}
         </React.Fragment>
     )
 }

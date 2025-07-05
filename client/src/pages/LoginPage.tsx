@@ -7,7 +7,7 @@ import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
 import { useNavigate, Link } from 'react-router-dom'
 
-import { loginFormSchema } from '../../../shared/validation/schemas'
+import { loginFormSchema } from '@/shared/validation/schemas'
 
 import {
     Form,
