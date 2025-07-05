@@ -1,5 +1,5 @@
-import {ScrollArea} from "@/components/ui/scroll-area"
-import {TodoListItem, type TaskList} from "./TodoListItem"
+import {ScrollArea} from "@/components/ui/scroll-area.tsx"
+import {TodoListItem, type TaskList} from "./TodoListItem.tsx"
 
 interface TodoListTableProps {
     lists: TaskList[]
@@ -17,7 +17,7 @@ export function TodoListTable({
     return (
         <ScrollArea className="h-full overflow-auto px-2">
             <div className="p-4">
-                <h4 className="mb-4 text-sm font-medium">Todo Lists</h4>
+                <h4 className="mb-4 text-sm font-medium">My Tasks Lists</h4>
 
                 {lists.length === 0 ? (
                     <p className="text-sm text-muted-foreground">No lists yet.</p>

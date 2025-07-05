@@ -1,12 +1,12 @@
 import * as React from "react"
-import { Button } from "@/components/ui/button"
+import { Button } from "@/components/ui/button.tsx"
 import {
     DropdownMenu,
     DropdownMenuTrigger,
     DropdownMenuContent,
     DropdownMenuItem,
     DropdownMenuSeparator,
-} from "@/components/ui/dropdown-menu"
+} from "@/components/ui/dropdown-menu.tsx"
 import {
     AlertDialog,
     AlertDialogContent,
@@ -16,7 +16,7 @@ import {
     AlertDialogFooter,
     AlertDialogCancel,
     AlertDialogAction,
-} from "@/components/ui/alert-dialog"
+} from "@/components/ui/alert-dialog.tsx"
 import { PiDotsSixVertical } from "react-icons/pi"
 
 interface TodoListItemMenuProps {

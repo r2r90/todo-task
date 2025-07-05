@@ -1,8 +1,8 @@
 import * as React from "react"
-import {Sidebar,} from "@/components/ui/sidebar"
-import AddList from "@/components/AddList.tsx";
+import {Sidebar,} from "@/components/ui/sidebar.tsx"
+import AddList from "@/components/left-sidebar/AddList.tsx";
 import {Separator} from "@radix-ui/react-separator";
-import {TodoListTable} from "@/components/TodoListTable.tsx";
+import {TodoListTable} from "@/components/left-sidebar/TodoListTable.tsx";
 import {useLists} from "@/hooks/ListsContext.tsx";
 
 

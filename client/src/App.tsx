@@ -8,6 +8,7 @@ import {
 import RegisterPage from "@/pages/RegisterPage.tsx";
 import LoginPage from "@/pages/LoginPage.tsx";
 import {ListsProvider} from "@/hooks/ListsContext.tsx";
+import {TasksProvider} from "./hooks/TasksContext";
 
 
 function App() {
@@ -16,17 +17,19 @@ function App() {
     return (
         <BrowserRouter>
             <ListsProvider>
-                <Routes>
-                    <Route path="/" element={<Navigate to="/login" replace/>}/>
+                <TasksProvider>
+                    <Routes>
+                        <Route path="/" element={<Navigate to="/login" replace/>}/>
 
-                    <Route path="/login" element={<LoginPage/>}/>
-                    <Route path="/register" element={<RegisterPage/>}/>
+                        <Route path="/login" element={<LoginPage/>}/>
+                        <Route path="/register" element={<RegisterPage/>}/>
 
-                    <Route
-                        path="/dashboard"
-                        element={<Dashboard/>}
-                    />
-                </Routes>
+                        <Route
+                            path="/dashboard"
+                            element={<Dashboard/>}
+                        />
+                    </Routes>
+                </TasksProvider>
             </ListsProvider>
         </BrowserRouter>
     )
