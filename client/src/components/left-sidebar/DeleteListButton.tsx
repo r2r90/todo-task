@@ -1,4 +1,4 @@
-import {ConfirmDialog} from "@/components/ConfirmDialog";
+import {ConfirmDialog} from "@/components/ui/ConfirmDialog";
 
 
 interface DeleteListButtonProps {

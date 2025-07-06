@@ -10,7 +10,7 @@ import {
     SheetTrigger,
 } from "@/components/ui/sheet"
 import {Button} from "@/components/ui/button"
-import {ConfirmDialog} from "@/components/ConfirmDialog";
+import {ConfirmDialog} from "@/components/ui/ConfirmDialog";
 
 export interface TodoData {
     id: string

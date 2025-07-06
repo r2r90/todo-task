@@ -39,7 +39,7 @@ export const AuthProvider = ({children}: { children: React.ReactNode }) => {
         setAccessToken(data.accessToken);
     };
 
-    /**
+    /**·
      * Logout
      * calls /auth/logout and clears token + redirects
      */
