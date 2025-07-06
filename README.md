@@ -1,4 +1,4 @@
-# Test Libheros - Technique
+# Test Technique
 
 ## Contexte
 
