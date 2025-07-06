@@ -1,5 +1,5 @@
 import {Separator} from "@/components/ui/separator"
-import type {TaskList} from "@/hooks/ListsContext"
+import type {TaskList} from "@/context/ListsContext"
 import {DeleteListButton} from "@/components/left-sidebar/DeleteListButton";
 
 interface TodoListItemProps {

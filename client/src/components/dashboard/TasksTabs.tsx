@@ -1,15 +1,13 @@
 import * as React from "react"
-import {useLists} from "@/hooks/ListsContext"
-import {useTasks} from "@/hooks/TasksContext"
+import {useLists} from "@/context/ListsContext"
+import {useTasks} from "@/context/TasksContext"
 import {Tabs, TabsList, TabsTrigger, TabsContent} from "@/components/ui/tabs"
-import TodoTable from "@/components/main/TodoTable"
+import TodoTable from "@/components/dashboard/TodoTable"
 
 export function TasksTabs() {
     const {activeListId} = useLists()
     const {tasks, loadTasks, toggleComplete, deleteTask} =
         useTasks()
-
-
 
 
     // Reload tasks whenever the selected list changes

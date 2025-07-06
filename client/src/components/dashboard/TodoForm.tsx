@@ -8,9 +8,9 @@ import {Form, FormControl, FormDescription, FormField, FormItem, FormLabel, Form
 import {Input} from "@/components/ui/input"
 import {Textarea} from "@/components/ui/textarea"
 
-import {useTasks} from "@/hooks/TasksContext"
-import {useLists} from "@/hooks/ListsContext"
-import {DateTimePicker24h} from "../ui/DateTimePicker"
+import {useTasks} from "@/context/TasksContext"
+import {useLists} from "@/context/ListsContext"
+import { DateTimePicker24h} from "../ui/DateTimePicker"
 
 // Zod schema
 const formSchema = z.object({
@@ -54,7 +54,7 @@ export default function TodoForm() {
             toast.success("Task added!")
             form.reset()
         } catch (err) {
-            toast.error("Could not add task. Please try again.")
+           console.error(err)
         }
     }
 
@@ -101,7 +101,7 @@ export default function TodoForm() {
                     <FormField
                         control={form.control}
                         name="dueDate"
-                        render={({field}) => (
+                        render={({ field }) => (
                             <FormItem>
                                 <FormLabel>Deadline</FormLabel>
                                 <DateTimePicker24h

@@ -1,10 +1,10 @@
 import {Separator} from "@/components/ui/separator"
 import {SidebarInset, SidebarProvider, SidebarTrigger,} from "@/components/ui/sidebar"
 import {LeftSidebar} from "@/components/left-sidebar/LeftSidebar.tsx";
-import TodoForm from "@/components/main/TodoForm.tsx";
-import {TasksTabs} from "@/components/main/TasksTabs.tsx";
+import TodoForm from "@/components/dashboard/TodoForm.tsx";
+import {TasksTabs} from "@/components/dashboard/TasksTabs.tsx";
 import {Button} from "@/components/ui/button";
-import {useAuth} from "@/hooks/use-auth.hook";
+import {useAuth} from "@/hooks/useAuth";
 import {useNavigate} from "react-router-dom";
 import {toast} from "sonner";
 

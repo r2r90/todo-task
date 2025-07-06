@@ -1,6 +1,6 @@
 import {ScrollArea} from "@/components/ui/scroll-area.tsx"
 import {TodoListItem} from "./TodoListItem.tsx"
-import type {TaskList} from "@/hooks/ListsContext";
+import type {TaskList} from "@/context/ListsContext";
 
 interface TodoListTableProps {
     lists: TaskList[]

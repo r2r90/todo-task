@@ -1,4 +1,10 @@
-import {ConflictException, ForbiddenException, Injectable, NotFoundException} from '@nestjs/common';
+import {
+    BadRequestException,
+    ConflictException,
+    ForbiddenException,
+    Injectable,
+    NotFoundException
+} from '@nestjs/common';
 import {PrismaService} from "@/prisma/prisma.service";
 import {CreateTodoDto} from "@/todo/dto/create-todo.dto";
 import {CreateTodoListDto} from "@/todo/dto/create-todo-list.dto";
@@ -16,6 +22,17 @@ export class TodoService {
         if (list.ownerId !== userId) {
             throw new ForbiddenException('You do not have permission to add tasks to this list.');
         }
+
+        const due = new Date(dueDate);
+        if (isNaN(due.getTime())) {
+            throw new BadRequestException('Invalid due date format.');
+        }
+        if (due.getTime() < Date.now()) {
+            throw new BadRequestException(
+                'Due date must be in the future.',
+            );
+        }
+
 
         return this.prismaService.todo.create({
             data: {

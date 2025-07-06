@@ -1,8 +1,7 @@
-// src/hooks/TasksContext.tsx
-
 import * as React from "react"
-import { api } from "@/lib/api"
-import { useAuth } from "./use-auth.hook"
+import {api} from "@/lib/api"
+import {useAuth} from "@/hooks/useAuth"
+import {toast} from "sonner";
 
 export interface Task {
     id: string
@@ -36,7 +35,7 @@ const TasksContext = React.createContext<TasksContextValue | undefined>(
 export const TasksProvider: React.FC<React.PropsWithChildren<{}>> = ({
                                                                          children,
                                                                      }) => {
-    const { accessToken } = useAuth()
+    const {accessToken} = useAuth()
     const [tasks, setTasks] = React.useState<Task[]>([])
 
     // Load all tasks
@@ -46,7 +45,7 @@ export const TasksProvider: React.FC<React.PropsWithChildren<{}>> = ({
             try {
                 const res = await api.get<Task[]>(
                     `/todo/list/${listId}/todos`,
-                    { headers: { Authorization: `Bearer ${accessToken}` } }
+                    {headers: {Authorization: `Bearer ${accessToken}`}}
                 )
                 setTasks(res.data)
             } catch (err) {
@@ -68,18 +67,14 @@ export const TasksProvider: React.FC<React.PropsWithChildren<{}>> = ({
         ) => {
             if (!accessToken) return
             try {
-                const res = await api.post<Task>(
-                    `/todo/${listId}/todo`,
-                    {
-                        shortDescription: data.shortDescription,
-                        longDescription: data.longDescription,
-                        dueDate: data.dueDate,
-                    },
-                    { headers: { Authorization: `Bearer ${accessToken}` } }
-                )
-                setTasks((prev) => [res.data, ...prev])
+                const res = await api.post(`/todo/${listId}/todo`, data, {headers: {Authorization: `Bearer ${accessToken}`}});
+                setTasks(prev => [...prev, res.data]);
+                return res.data;
             } catch (err: any) {
+                const msg = err.response?.data?.message || "Failed to create Task: Something went wrong"
+                toast.error(msg)
                 console.error("Failed to create task", err.response?.data || err)
+                throw err
             }
         },
         [accessToken]
@@ -93,19 +88,24 @@ export const TasksProvider: React.FC<React.PropsWithChildren<{}>> = ({
                 const res = await api.patch<Task>(
                     `/todo/${taskId}`,
                     {},
-                    { headers: { Authorization: `Bearer ${accessToken}` } }
+                    {headers: {Authorization: `Bearer ${accessToken}`}}
                 )
                 setTasks((prev) =>
                     prev.map((t) => (t.id === taskId ? res.data : t))
                 )
-            } catch (err) {
+            } catch (err: any) {
+                const msg = err.response?.data?.message || "Failed to toggle: Something went wrong"
+                toast.error(msg)
                 console.error("Failed to toggle completion", err)
+                throw err
             }
         },
         [accessToken]
     )
 
-    // Edit a task
+
+
+    // Edit a task => EN CAS BESOIN
     const editTask = React.useCallback(
         async (taskId: string, updates: Partial<Task>) => {
             if (!accessToken) return
@@ -113,13 +113,16 @@ export const TasksProvider: React.FC<React.PropsWithChildren<{}>> = ({
                 const res = await api.patch<Task>(
                     `/todo/${taskId}`,
                     updates,
-                    { headers: { Authorization: `Bearer ${accessToken}` } }
+                    {headers: {Authorization: `Bearer ${accessToken}`}}
                 )
                 setTasks((prev) =>
                     prev.map((t) => (t.id === taskId ? res.data : t))
                 )
-            } catch (err) {
+            } catch (err: any) {
+                const msg = err.response?.data?.message || "Failed to edit task"
+                toast.error(msg)
                 console.error("Failed to edit task", err)
+                throw err
             }
         },
         [accessToken]
@@ -131,10 +134,12 @@ export const TasksProvider: React.FC<React.PropsWithChildren<{}>> = ({
             if (!accessToken) return
             try {
                 await api.delete(`/todo/${taskId}`, {
-                    headers: { Authorization: `Bearer ${accessToken}` },
+                    headers: {Authorization: `Bearer ${accessToken}`},
                 })
+                toast.success("Task deleted successfully.")
                 setTasks((prev) => prev.filter((t) => t.id !== taskId))
             } catch (err) {
+
                 console.error("Failed to delete task", err)
             }
         },

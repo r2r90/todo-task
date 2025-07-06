@@ -1,7 +1,9 @@
 import * as React from "react"
 import {api} from "@/lib/api"
-import {useAuth} from "@/hooks/use-auth.hook.ts";
-import {toast} from "sonner";       // your axios instance
+import {useAuth} from "@/hooks/useAuth.ts";
+import {toast} from "sonner";
+
+
 
 export interface TaskList {
     id: string
@@ -38,8 +40,11 @@ export const ListsProvider: React.FC<React.PropsWithChildren<{}>> = ({
                 })
                 setLists(res.data)
                 if (res.data.length) setActiveListId(res.data[0].id)
-            } catch (err) {
+            } catch (err:any) {
+                const msg = err.response?.data?.message || "Failed to fetch lists: Something went wrong"
+                toast.error(msg)
                 console.error("Failed to fetch lists", err)
+                throw err
             }
         })()
     }, [accessToken])
@@ -58,9 +63,13 @@ export const ListsProvider: React.FC<React.PropsWithChildren<{}>> = ({
                 setActiveListId(res.data.id)
             } catch (err: any) {
                 if (err.response?.status === 409) {
-                    alert("A list with that name already exists.")
+                    toast.error("A list with that name already exists.")
+                    throw err
                 } else {
+                    const msg = err.response?.data?.message || "Failed to create list: Something went wrong"
+                    toast.error(msg)
                     console.error("Failed to create list", err)
+                    throw err
                 }
             }
         },
@@ -83,8 +92,12 @@ export const ListsProvider: React.FC<React.PropsWithChildren<{}>> = ({
                 setLists((prev) => prev.filter((l) => l.id !== id))
                 toast.success('List Successfully deleted.')
                 setActiveListId((prev) => (prev === id ? null : prev))
-            } catch (err) {
+            } catch (err:any) {
+                const msg = err.response?.data?.message || "Failed to delete list: Something went wrong"
+                toast.error(msg)
                 console.error("Failed to delete list", err)
+                throw err
+
             }
         },
         [accessToken],
