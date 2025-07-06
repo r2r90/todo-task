@@ -1,57 +1,76 @@
-# Todo-Task
+# Todo App
 
-## Introduction
+## 🚀 Technologies utilisées
 
-Todo-Task est une application de gestion de listes de tâches, composée d'une partie front-end (client) et d'une partie back-end (serveur). Elle permet à un utilisateur de créer, modifier, marquer comme terminées et restaurer des tâches au sein de différentes listes.
+### Frontend
+- ⚛️ **React**
+- ⚡ **Vite**
+- 🎨 **Shadcn/ui**
+
+### Backend
+- 🚀 **NestJS**
+- 🐘 **PostgreSQL**
+- 🔷 **Prisma ORM**
+
+### Autres
+- 🐳 **Docker & Docker Compose**
+- 🔑 **JWT (authentification)**
+
+## Fonctionnalités
+
+
+- Authentification et création de compte utilisateur.
+- Création, sélection et suppression de listes de tâches.
+- Ajout de tâches avec description courte, description longue optionnelle et date d'échéance.
+- Marquer les tâches comme terminées ou les restaurer.
+- Affichage détaillé des tâches.
+- Documentation OpenAPI intégrée.
+- Tests e2e automatisés disponibles.
+
+
+> **Note** : <span style="font-size: 16px;">La configuration présentée ici est prévue uniquement pour un environnement de développement. Pour un déploiement en production, adaptez les variables d'environnement, les ports et la configuration Docker selon vos besoins.</span>
 
 ---
 
+## Documentation de l'API
+
+J’ai créé une documentation OpenAPI (Swagger) pour faciliter la compréhension des endpoints de l’API. Elle est accessible via l’URL :
+
+```
+http://localhost:4000/docs
+```
+
 ## Prérequis
 
-* **Node.js** (v16+)
-
-* **npm** (v8+) ou **Yarn**
-
-* **PostgreSQL** (v12+)
-
-* **Docker** (v20+)
-
-* **Docker Compose** (v1.29+)
-
-* **Node.js** (v16+)
-
-* **npm** (v8+) ou **Yarn**
-
-* **PostgreSQL** (v12+)
+- **Node.js** (v16+)
+- **npm** (v8+) ou **Yarn**
+- **PostgreSQL** (v12+)
+- **Docker** (v20+)
+- **Docker Compose** (v1.29+)
 
 ---
 
 ## Installation
 
-1. Cloner le dépôt :
-
+1. Cloner le dépôt :
    ```bash
    git clone https://github.com/r2r90/todo-task.git
    cd todo-task
    ```
 
 2. Installer les dépendances :
-
-  * **Serveur** (NestJS + Prisma) :
-
-    ```bash
-    cd server
-    cp .env.example .env
-    npm install
-    ```
-
-  * **Client** (React + Vite) :
-
-    ```bash
-    cd ../client
-    cp .env.example .env
-    npm install
-    ```
+   - **Serveur** :
+     ```bash
+     cd server
+     cp .env.example .env
+     npm install
+     ```
+   - **Client** :
+     ```bash
+     cd ../client
+     cp .env.example .env
+     npm install
+     ```
 
 ---
 
@@ -59,18 +78,24 @@ Todo-Task est une application de gestion de listes de tâches, composée d'une p
 
 ### Serveur
 
-Dans `server/.env`, configurez :
+Modifier `server/.env` :
 
-* `NODE_ENV` : `development` ou `production`
-* `APPLICATION_PORT` : port d'écoute (défaut : 4000)
-* `POSTGRES_URI` : URI de connexion à PostgreSQL
-* `JWT_SECRET`, `JWT_ACCESS_TOKEN_TTL`, `JWT_REFRESH_TOKEN_TTL` : paramètres JWT
+```env
+NODE_ENV=development
+APPLICATION_PORT=4000
+POSTGRES_URI=postgresql://user:pass@localhost:5432/todo
+JWT_SECRET=your_secret
+JWT_ACCESS_TOKEN_TTL=3600s
+JWT_REFRESH_TOKEN_TTL=7d
+```
 
 ### Client
 
-Dans `client/.env`, configurez :
+Modifier `client/.env` :
 
-* `VITE_API_URL` : URL de l'API (défaut : `http://localhost:4000/api`)
+```env
+VITE_API_URL=http://localhost:4000/api
+```
 
 ---
 
@@ -78,198 +103,68 @@ Dans `client/.env`, configurez :
 
 ### Mode développement
 
-* **Serveur** :
-
+- **Serveur** :
   ```bash
   cd server
-  npm run db:push      # Mise à jour du schéma Prisma
-  npm run start:dev    # Serveur avec live reload
+  npm run db:push       # Mise à jour du schéma Prisma
+  npm run start:dev     # Live reload
   ```
+  Accessible : http://localhost:4000
 
-  Accessible sur : `http://localhost:4000`
-
-* **Client** :
-
+- **Client** :
   ```bash
   cd client
-  npm run dev          # Serveur de développement Vite
+  npm run dev           # Serveur Vite
   ```
-
-  Accessible sur : `http://localhost:5173`
-
-### Mode production
-
-* **Serveur** :
-
-  ```bash
-  cd server
-  npm run build        # Compilation NestJS
-  npm run start:prod   # Serveur en production
-  ```
-
-* **Client** :
-
-  ```bash
-  cd client
-  npm run build        # Génération des fichiers statiques
-  npm run preview      # Prévisualisation du build
-  ```
-
----
+  Accessible : http://localhost:3000
 
 ## Docker
 
-Le projet peut également être lancé via Docker et Docker Compose pour simplifier le déploiement.
-
-### Fichiers disponibles
-
-* `Dockerfile` (serveur)
-* `docker-compose.yml` (compose pour serveur, client et base de données)
-
-### Lancer avec Docker Compose
+Lancer tous les services avec Docker Compose :
 
 ```bash
-# Depuis la racine du projet
 docker-compose up --build
 ```
 
-Les services démarrent sur :
+- API : http://localhost:4000
+- Front-end : http://localhost:3000
+- PostgreSQL : port 5432
 
-* **API Serveur** : `http://localhost:4000`
-* **Front-end** : `http://localhost:5173`
-* **Base de données PostgreSQL** : accessible sur le port configuré (`5432` par défaut)
-
-Pour arrêter et supprimer les conteneurs et volumes :
+Arrêter et nettoyer :
 
 ```bash
 docker-compose down -v
 ```
-
-### Mode développement
-
-* **Serveur** :
-
-  ```bash
-  cd server
-  npm run db:push      # Mise à jour du schéma Prisma
-  npm run start:dev    # Serveur avec live reload
-  ```
-
-  Accessible sur : `http://localhost:4000`
-
-* **Client** :
-
-  ```bash
-  cd client
-  npm run dev          # Serveur de développement Vite
-  ```
-
-  Accessible sur : `http://localhost:5173`
-
-### Mode production
-
-* **Serveur** :
-
-  ```bash
-  cd server
-  npm run build        # Compilation NestJS
-  npm run start:prod   # Serveur en production
-  ```
-
-* **Client** :
-
-  ```bash
-  cd client
-  npm run build        # Génération des fichiers statiques
-  npm run preview      # Prévisualisation du build
-  ```
 
 ---
 
 ## Structure du projet
 
 ```
-├── client/             # Front-end React (Vite, TS, Tailwind)
+todo-task/
+├── client/         # Front-end React (Vite, TS, Tailwind)
 │   ├── src/
 │   ├── public/
 │   ├── .env.example
 │   └── vite.config.ts
-│
-├── server/             # Back-end NestJS (TS, Prisma)
+├── server/         # Back-end NestJS (TS, Prisma)
 │   ├── src/
 │   ├── prisma/
-│   ├── test/           # Tests e2e
+│   ├── test/       # e2e tests
 │   ├── .env.example
-│   └── src/main.ts     # Point d'entrée, config Swagger
-│
-├── README.md           # Ce fichier
+│   └── src/main.ts # Point d'entrée, Swagger
+├── docker-compose.yml
+├── README.md
 └── .gitignore
 ```
 
 ---
 
-## Commandes utiles
-
-* `npm run lint` : ESLint (format & erreurs)
-* `npm run test` : exécute tous les tests (unitaires + e2e)
-* `npm run test:watch` : relance les tests à chaque modif
-* `npm run test:cov` : génère le rapport de couverture
-* `npm run build` : compile le projet pour la prod
-
----
-
 ## Tests
 
-Le back-end utilise **Jest** pour :
+Le back-end utilise Jest pour les tests e2e. J’ai créé des tests couvrant les endpoints d’authentification et de gestion des tâches :
 
-* **Unitaires** : fichiers `server/src/**/*.spec.ts`
-* **e2e** : `server/test/app.e2e-spec.ts`
-
-**Commandes :**
-
-* `npm run test` (tous tests)
-* `npm run test:cov` (couverture HTML dans `server/coverage`)
-* `npm run test:watch` (mode watch)
+- **Authentification** : tests des endpoints de login et d’inscription (`server/test/auth.e2e-spec.ts`)
+- **Todo** : tests des endpoints de création, lecture, mise à jour et suppression de tâches (`server/test/todo.e2e-spec.ts`)
 
 ---
-
-## Documentation de l'API
-
-Le serveur expose **Swagger** sur :
-
-```
-http://localhost:4000/doc
-```
-
-**Configuration (server/src/main.ts)** :
-
-```ts
-import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
-
-async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
-  const config = new DocumentBuilder()
-    .setTitle('Todo-Task API')
-    .setDescription('API pour la gestion de tâches')
-    .setVersion('1.0')
-    .addBearerAuth()
-    .build();
-  const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('doc', app, document);
-  await app.listen(process.env.APPLICATION_PORT || 4000);
-}
-```
-
----
-
-## Dépannage
-
-* **Connexion PostgreSQL** : vérifiez `POSTGRES_URI` et que PostgreSQL est lancé.
-* **Port occupé** : changez `APPLICATION_PORT` ou le port Vite dans `vite.config.ts`.
-* **Tests échouent** : assurez-vous d'avoir configuré `DATABASE_URL_TEST` et exécuté `npm run db:push`.
-
----
-
-## Contact
-
-En cas de question ou de problème, ouvre une issue sur le dépôt GitHub.
