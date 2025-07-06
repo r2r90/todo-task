@@ -20,12 +20,9 @@ export function TodoListItem({
     return (
         <>
             <div
-                onClick={() => {
-                    if (isActive) {
-                        onSelect("");
-                    } else {
-                        onSelect(list.id);
-                    }
+                onClick={(e) => {
+                    e.stopPropagation();
+                    onSelect(list.id);
                 }}
                 className={`
                     flex items-center gap-3

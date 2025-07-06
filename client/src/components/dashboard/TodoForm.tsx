@@ -12,7 +12,6 @@ import {useTasks} from "@/context/TasksContext"
 import {useLists} from "@/context/ListsContext"
 import { DateTimePicker24h} from "../ui/DateTimePicker"
 
-// Zod schema
 const formSchema = z.object({
     shortDesc: z.string().min(1, "Short description is required"),
     longDesc: z.string().optional(),

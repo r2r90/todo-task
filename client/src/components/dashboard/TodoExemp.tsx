@@ -1,5 +1,3 @@
-import React from 'react';
-
 const Todo = () => {
     return (
         <div className="flex items-center gap-3">

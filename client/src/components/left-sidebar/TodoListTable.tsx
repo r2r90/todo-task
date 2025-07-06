@@ -10,9 +10,11 @@ interface TodoListTableProps {
 }
 
 export function TodoListTable({lists, activeListId, onSelect, onDelete,}: TodoListTableProps) {
+
+
     return (
-        <ScrollArea className="h-full overflow-auto px-2">
-            <div className="p-4">
+        <ScrollArea className="h-full overflow-auto px-2"  onClick={() => onSelect("")}>
+            <div className="p-4" >
                 <h4 className="mb-4 text-sm font-medium">My Tasks Lists</h4>
 
                 {lists.length === 0 ? (

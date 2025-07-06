@@ -5,7 +5,9 @@
 ### Frontend
 - ⚛️ **React**
 - ⚡ **Vite**
+- 🔗 **React Router**
 - 🎨 **Shadcn/ui**
+- 🎨 **Tailwind CSS**
 
 ### Backend
 - 🚀 **NestJS**
@@ -13,10 +15,15 @@
 - 🔷 **Prisma ORM**
 
 ### Autres
-- 🐳 **Docker & Docker Compose**
+- 🐳 **Docker**
 - 🔑 **JWT (authentification)**
+- ✅ **Tests e2e (End-to-End)**
 
-## Fonctionnalités
+---
+
+## Description
+
+**Todo Full Stack Application** avec une authentification utilisateur sécurisée et des opérations CRUD complètes pour la gestion de tâches.
 
 
 - Authentification et création de compte utilisateur.
