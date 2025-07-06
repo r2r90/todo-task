@@ -1,7 +1,7 @@
 import {type JSX, useEffect, useState} from 'react'
 import { Navigate, useLocation } from 'react-router-dom'
 import { api } from '@/lib/api'
-import {useAuth} from "@/hooks/useAuth.ts";
+import {useAuth} from "@/context/AuthContext";
 
 
 export function RequireAuth({ children }: { children: JSX.Element }) {

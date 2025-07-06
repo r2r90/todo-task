@@ -4,7 +4,7 @@ import {LeftSidebar} from "@/components/left-sidebar/LeftSidebar.tsx";
 import TodoForm from "@/components/dashboard/TodoForm.tsx";
 import {TasksTabs} from "@/components/dashboard/TasksTabs.tsx";
 import {Button} from "@/components/ui/button";
-import {useAuth} from "@/hooks/useAuth";
+import {useAuth} from "@/context/AuthContext";
 import {useNavigate} from "react-router-dom";
 import {toast} from "sonner";
 

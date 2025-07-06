@@ -1,6 +1,6 @@
 import * as React from "react"
 import {api} from "@/lib/api"
-import {useAuth} from "@/hooks/useAuth.ts";
+import {useAuth} from './AuthContext'
 import {toast} from "sonner";
 
 

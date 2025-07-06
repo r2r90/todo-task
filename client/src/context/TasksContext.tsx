@@ -1,6 +1,6 @@
 import * as React from "react"
 import {api} from "@/lib/api"
-import {useAuth} from "@/hooks/useAuth"
+import {useAuth} from "./AuthContext"
 import {toast} from "sonner";
 
 export interface Task {
@@ -102,7 +102,6 @@ export const TasksProvider: React.FC<React.PropsWithChildren<{}>> = ({
         },
         [accessToken]
     )
-
 
 
     // Edit a task => EN CAS BESOIN

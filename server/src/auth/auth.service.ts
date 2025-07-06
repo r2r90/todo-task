@@ -49,6 +49,8 @@ export class AuthService {
         return this.auth(res, user.id)
     }
 
+
+
     async login(res: Response, dto: LoginDto) {
         const {email, password} = dto
 
@@ -61,13 +63,13 @@ export class AuthService {
         })
 
         if (!user) {
-            throw new NotFoundException('User not found')
+            throw new NotFoundException('Invalid email or password')
         }
 
         const isValidPassword = await verify(user.password, password)
 
         if (!isValidPassword) {
-            throw new NotFoundException('User not found')
+            throw new NotFoundException('Invalid email or password')
         }
 
         return this.auth(res, user.id)
@@ -75,32 +77,27 @@ export class AuthService {
     }
 
     async refresh(req: Request, res: Response) {
-        const refreshToken = req.cookies['refreshToken']
+        const refreshToken = req.cookies['refreshToken'];
         if (!refreshToken) {
-            throw new UnauthorizedException('Refresh token not found')
+            throw new UnauthorizedException('Refresh token not found');
         }
 
-        const payload: JwtPayload = await this.jwtService.verifyAsync(refreshToken)
-
-        if (payload) {
-            const user = await this.prismaService.user.findUnique({
-                where: {
-                    id: payload.id
-                },
-                select: {
-                    id: true
-                }
-            })
-
-
-            if (!user) {
-                throw new UnauthorizedException('User not found')
-            }
-
-            return this.auth(res, user.id)
+        let payload: JwtPayload;
+        try {
+            payload = await this.jwtService.verifyAsync(refreshToken);
+        } catch (err) {
+            throw new UnauthorizedException('Invalid or expired refresh token');
         }
 
-        return false
+        const user = await this.prismaService.user.findUnique({
+            where: { id: payload.id },
+            select: { id: true },
+        });
+        if (!user) {
+            throw new UnauthorizedException('User not found');
+        }
+
+        return this.auth(res, user.id);
     }
 
     async logout(res: Response) {

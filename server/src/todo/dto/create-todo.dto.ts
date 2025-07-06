@@ -5,18 +5,18 @@ export class CreateTodoDto {
     @ApiProperty({
         example: 'Buy milk',
         minLength: 3,
-        maxLength: 16
+        maxLength: 32
     })
     @IsString()
     @IsNotEmpty()
     @MinLength(3)
-    @MaxLength(16)
+    @MaxLength(255)
     shortDescription: string;
 
     @ApiProperty({
         example: 'Buy 2 liters of milk in the store',
         required: false,
-        maxLength: 64
+        maxLength: 255
     })
     @IsString()
     @IsOptional()

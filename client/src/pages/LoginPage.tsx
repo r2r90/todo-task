@@ -23,7 +23,7 @@ import {
 } from '@/components/ui/card'
 import {Input} from '@/components/ui/input'
 import {PasswordInput} from '@/components/ui/password-input'
-import {useAuth} from "@/hooks/useAuth.ts";
+import {useAuth} from "@/context/AuthContext";
 
 type LoginValues = z.infer<typeof loginFormSchema>
 
