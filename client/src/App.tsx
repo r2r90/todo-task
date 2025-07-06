@@ -4,7 +4,7 @@ import RegisterPage from "@/pages/RegisterPage.tsx";
 import LoginPage from "@/pages/LoginPage.tsx";
 import {ListsProvider} from "@/context/ListsContext.tsx";
 import {TasksProvider} from "./context/TasksContext";
-import {RequireAuth} from "@/auth/RequireAuth.tsx";
+import {RequireAuth} from "@/components/auth/RequireAuth.tsx";
 import {Toaster} from "sonner";
 import {AuthProvider} from "@/context/AuthContext";
 
